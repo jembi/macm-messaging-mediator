@@ -4,7 +4,8 @@
   "description": "RapidPro messaging mediator",
   "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "rm -rf lib/",
+    "build": "npm run clean && babel src/ --out-dir lib/"
   },
   "repository": {
     "type": "git",
@@ -25,5 +26,11 @@
   "homepage": "https://github.com/jembi/rapidpro-messaging-mediator#readme",
   "engines": {
     "node": "~10.15.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.3",
+    "@babel/core": "^7.4.3",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.4.3"
   }
 }
