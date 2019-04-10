@@ -1,0 +1,29 @@
+{
+  "name": "rapidpro-messaging-mediator",
+  "version": "0.0.1",
+  "description": "RapidPro messaging mediator",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jembi/rapidpro-messaging-mediator.git"
+  },
+  "keywords": [
+    "hie",
+    "openhie",
+    "openhim",
+    "mediator",
+    "fhir"
+  ],
+  "author": "de-laz <sifubalazola@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jembi/rapidpro-messaging-mediator/issues"
+  },
+  "homepage": "https://github.com/jembi/rapidpro-messaging-mediator#readme",
+  "engines": {
+    "node": "~10.15.3"
+  }
+}
