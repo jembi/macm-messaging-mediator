@@ -16,7 +16,9 @@
     "openhie",
     "openhim",
     "mediator",
-    "fhir"
+    "fhir",
+    "rapidpro",
+    "messaging"
   ],
   "author": "Jembi Health Systems",
   "license": "MIT",
