@@ -1,0 +1,50 @@
+{
+  "name": "rapidpro-messaging-mediator",
+  "version": "0.0.1",
+  "description": "RapidPro messaging mediator",
+  "main": "lib/index.js",
+  "scripts": {
+    "clean": "rm -rf lib/",
+    "build": "npm run clean && babel src/ --out-dir lib/",
+    "lint": "node_modules/.bin/eslint src/",
+    "lint:fix": "node_modules/.bin/eslint src/ --fix",
+    "test": "jest --coverage",
+    "test:watch": "jest --watchAll"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jembi/rapidpro-messaging-mediator.git"
+  },
+  "keywords": [
+    "hie",
+    "openhie",
+    "openhim",
+    "mediator",
+    "fhir",
+    "rapidpro",
+    "messaging"
+  ],
+  "author": "Jembi Health Systems",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jembi/rapidpro-messaging-mediator/issues"
+  },
+  "homepage": "https://github.com/jembi/rapidpro-messaging-mediator#readme",
+  "engines": {
+    "node": "~10.15.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.3",
+    "@babel/core": "^7.4.3",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.4.3",
+    "babel-jest": "^24.7.1",
+    "eslint": "^5.16.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "jest": "^24.7.1"
+  }
+}
