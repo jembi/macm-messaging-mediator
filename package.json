@@ -18,7 +18,7 @@
     "mediator",
     "fhir"
   ],
-  "author": "de-laz <sifubalazola@gmail.com>",
+  "author": "Jembi Health Systems",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jembi/rapidpro-messaging-mediator/issues"
