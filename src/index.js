@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import app from './app'
 import http from 'http'
+import logger from './logger'
 
 const normalizePort = (val) => {
   const port = parseInt(val, 10)
@@ -27,10 +28,10 @@ const onError = (error) => {
 
   switch (error.code) {
     case 'EACCES':
-      console.error(bind + ' requires elevated privileges')
+      logger.error(`${bind} requires elevated privileges`)
       process.exit(1)
     case 'EADDRINUSE':
-      console.error(bind + ' is already in use')
+      logger.error(`${bind} is already in use`)
       process.exit(1)
     default:
       throw error
@@ -38,11 +39,11 @@ const onError = (error) => {
 }
 
 const onListening = () => {
-  var addr = server.address()
-  var bind = typeof addr === 'string'
+  const addr = server.address()
+  const bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port
-  console.log('Listening on ' + bind)
+  logger.info(`Listening on ${bind}`)
 }
 
 const port = normalizePort(process.env.PORT || '3000')
