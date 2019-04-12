@@ -9,7 +9,8 @@
     "lint": "node_modules/.bin/eslint src/",
     "lint:fix": "node_modules/.bin/eslint src/ --fix",
     "test": "jest --coverage",
-    "test:watch": "jest --watchAll"
+    "test:watch": "jest --watchAll",
+    "start": "nodemon --exec babel-node src/"
   },
   "repository": {
     "type": "git",
@@ -46,5 +47,8 @@
     "eslint-plugin-promise": "^4.1.1",
     "eslint-plugin-standard": "^4.0.0",
     "jest": "^24.7.1"
+  },
+  "dependencies": {
+    "nodemon": "^1.18.11"
   }
 }
