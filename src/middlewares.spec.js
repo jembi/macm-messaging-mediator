@@ -95,7 +95,6 @@ describe('Middlewares', () => {
         expect(next.mock.calls.length).toBe(1)
         expect(next.mock.calls[0].length).toBe(1)
         expect(next.mock.calls[0][0]).toBeInstanceOf(Error)
-        console.log(next.mock.calls[0][0].message)
         expect(next.mock.calls[0][0].message).toBe(`Resource status is required and must be 'active'`)
         expect(request.communicationRequest).toBeUndefined()
       })
