@@ -1,18 +1,14 @@
 /* eslint-disable indent */
 'use strict'
-import { COMMUNICATION_REQUEST, COMMUNICATION_REQUEST_ACTIVE_STATUS } from './contants'
+import { fhirResources, statuses } from './constants'
 import { bindCommunicationRequest } from './middlewares'
+import { validCommunicationRequest } from './testUtils/data'
 
 describe('Middlewares', () => {
   describe('bindCommunicationRequest', () => {
     describe('request body alidations', () => {
-      test(`binds to request object when resourceType is ${COMMUNICATION_REQUEST} and valid`, () => {
-        const request = {
-          body: {
-            resourceType: 'CommunicationRequest',
-            status: 'active'
-          }
-        }
+      test(`binds to request object when resourceType is ${fhirResources.COMMUNICATION_REQUEST} and valid`, () => {
+        const request = { body: Object.assign({}, validCommunicationRequest) }
         const next = jest.fn()
 
         bindCommunicationRequest(request, {}, next)
@@ -33,7 +29,6 @@ describe('Middlewares', () => {
         expect(next.mock.calls.length).toBe(1)
         expect(next.mock.calls[0].length).toBe(1)
         expect(next.mock.calls[0][0]).toBeInstanceOf(Error)
-        expect(next.mock.calls[0][0].message).toBe('"resourceType" is required')
         expect(request.communicationRequest).toBeUndefined()
       })
     })
@@ -52,7 +47,7 @@ describe('Middlewares', () => {
         expect(request.communicationRequest).toBeUndefined()
       })
 
-      test(`raises error when 'resourceType' is not '${COMMUNICATION_REQUEST}'`, () => {
+      test(`raises error when 'resourceType' is not '${fhirResources.COMMUNICATION_REQUEST}'`, () => {
         const request = { body: { resourceType: 'not communication request', status: 'active' } }
         const next = jest.fn()
 
@@ -86,8 +81,8 @@ describe('Middlewares', () => {
         ${undefined}
         ${'undefined'}
         ${'not a valid status'}
-        `(`raises error when 'status' is not '${COMMUNICATION_REQUEST_ACTIVE_STATUS}'`, ({ status }) => {
-        const request = { body: { resourceType: COMMUNICATION_REQUEST, status: status } }
+        `(`raises error when 'status' is not '${statuses.COMMUNICATION_REQUEST_ACTIVE_STATUS}'`, ({ status }) => {
+        const request = { body: { resourceType: fhirResources.COMMUNICATION_REQUEST, status: status } }
         const next = jest.fn()
 
         bindCommunicationRequest(request, {}, next)
