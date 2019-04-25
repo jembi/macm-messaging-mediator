@@ -20,3 +20,10 @@ export const logger = createLogger({
 
 export const wrapHandler = fn =>
   (req, res, next) => fn(req, res, next).catch(next)
+
+export const buildHearthUrl = ({ host, port, secured, path }) => {
+  const protocol = secured === true ? 'https' : 'http'
+  const fullPath = (path && path.startsWith('/')) ? path.slice(1) : path
+
+  return `${protocol}://${host}:${port}/${fullPath}`
+}

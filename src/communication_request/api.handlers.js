@@ -5,9 +5,9 @@ import R from 'ramda'
 import { CommunicationRequestSchema } from './schema'
 import { fhirStore, rapidPro } from '../services'
 
-const createCommunicationResource = communicationRequest => new Promise((resolve, reject) => resolve())
+const createCommunicationResource = communicationRequest => new Promise((resolve, reject) => resolve(communicationRequest))
 
-const createResponse = communicationResource => new Promise((resolve, reject) => resolve())
+const createResponse = communicationResource => new Promise((resolve, reject) => resolve(communicationResource))
 
 export const addCommunicationRequest = async (req, res, next) => {
   const validationResult = Joi.validate(req.body || {}, CommunicationRequestSchema)

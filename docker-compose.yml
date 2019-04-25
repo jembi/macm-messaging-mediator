@@ -5,7 +5,7 @@ services:
     image: mongo:3.6
     container_name: mongo
     ports:
-      - "27018:27017"
+      - "27017:27017"
     networks:
       - messaging-mediator-network
   
@@ -19,7 +19,7 @@ services:
     environment:
       - server__fhirVersion=stu3
       - server__port=3447
-      - mongodb__url=mongodb://mongo:27018/hearth
+      - mongodb__url=mongodb://mongo:27017/hearth
       - NODE_ENV=development
     ports:
       - "3447:3447"
@@ -34,7 +34,9 @@ services:
       - "3000:3000"
     environment:
         - NODE_ENV=development
-        - HEARTH_URL=http://hearth:3447/
+        - HEARTH_HOST=hearth
+        - HEARTH_PORT=3447
+        - HEARTH_SCURED=false
         - PORT=3000
 
 networks:

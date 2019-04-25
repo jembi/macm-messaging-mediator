@@ -17,3 +17,11 @@ export const fhirResources = {
 export const fhirPriorities = {
   ROUTINE: 'routine'
 }
+
+export const configOptions = {
+  HEARTH_HOST: 'hearthHost',
+  HEARTH_PORT: 'hearthPort',
+  HEARTH_SCURED: 'hearthSecured',
+  NODE_ENV: 'env',
+  PORT: 'port'
+}
