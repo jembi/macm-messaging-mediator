@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import app from './app'
 import http from 'http'
-import logger from './logger'
+import { logger } from './utils'
 
 const normalizePort = (val) => {
   const port = parseInt(val, 10)
