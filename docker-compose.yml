@@ -32,6 +32,10 @@ services:
       - messaging-mediator-network
     ports:
       - "3000:3000"
+    environment:
+        - NODE_ENV=development
+        - HEARTH_URL=http://hearth:3447/
+        - PORT=3000
 
 networks:
   messaging-mediator-network:
