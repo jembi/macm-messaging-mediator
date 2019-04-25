@@ -7,7 +7,7 @@ import { fhirStore, rapidPro } from '../services'
 
 const createCommunicationResource = communicationRequest => new Promise((resolve, reject) => resolve())
 
-const createResponse = (communicationRequest) => new Promise((resolve, reject) => resolve())
+const createResponse = communicationResource => new Promise((resolve, reject) => resolve())
 
 export const addCommunicationRequest = async (req, res, next) => {
   const validationResult = Joi.validate(req.body || {}, CommunicationRequestSchema)
