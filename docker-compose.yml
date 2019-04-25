@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  mongo:
+    image: mongo:3.6
+    container_name: mongo
+    ports:
+      - "27018:27017"
+    networks:
+      - messaging-mediator-network
+  
+  hearth:
+    image: jembi/hearth
+    container_name: hearth
+    depends_on:
+      - mongo
+    networks:
+      - messaging-mediator-network
+    environment:
+      - server__fhirVersion=stu3
+      - server__port=3447
+      - mongodb__url=mongodb://mongo:27018/hearth
+      - NODE_ENV=development
+    ports:
+      - "3447:3447"
+  
+  messaging-mediator:
+    build: .
+    container_name: messaging-mediator
+    command: npm start
+    networks:
+      - messaging-mediator-network
+    ports:
+      - "3000:3000"
+
+networks:
+  messaging-mediator-network:
