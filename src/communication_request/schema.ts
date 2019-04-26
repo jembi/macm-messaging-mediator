@@ -1,5 +1,5 @@
 'use strict';
-import Joi from 'joi';
+import { default as Joi } from 'joi';
 import {
   fhirResources,
   statuses,

@@ -1,5 +1,5 @@
 'use strict';
-import createError from 'http-errors';
+import { default as createError } from 'http-errors';
 import * as Joi from 'joi';
 import * as R from 'ramda';
 import { Request, Response } from 'express';

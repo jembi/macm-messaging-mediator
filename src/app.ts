@@ -1,8 +1,8 @@
 'use strict';
 import express, { Request, Response } from 'express';
 import helmet from 'helmet';
-import createError from 'http-errors';
-import communicationRequest from './communication_request';
+import { default as createError } from 'http-errors';
+import { default as communicationRequest } from './communication_request';
 import config from './config';
 
 const app = express();
