@@ -22,12 +22,12 @@ npm start
 ```
 **Environmental Variable**  
 | Key  | Description |
-| ------- | ----------- |
-| NODE_ENV | Nodejs application environment |
-| HEARTH_HOST | Hearth host name |
-| HEARTH_PORT | The port Hearth is running on |
-| HEARTH_SECURED | `true` for `https` and `false` for `http` |
-| PORT | Port number for the mACM messaging mediator 
+ ------- | -----------
+ NODE_ENV | Nodejs application environment
+ HEARTH_HOST | Hearth host name
+ HEARTH_PORT | The port Hearth is running on
+ HEARTH_SECURED | `true` for `https` and `false` for `http`
+ PORT | Port number for the mACM messaging mediator 
 
 ## Running Tests
 
