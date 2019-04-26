@@ -21,7 +21,8 @@ To start the mediator without Docker please set the required environmental varia
 npm start
 ```
 **Environmental Variable**  
-| Key  | Description |
+
+  Key  | Description
  ------- | -----------
  NODE_ENV | Nodejs application environment
  HEARTH_HOST | Hearth host name
