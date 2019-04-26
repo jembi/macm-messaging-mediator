@@ -40,6 +40,92 @@ services:
         - PORT=3000
     volumes:
       - .:/code/
+  
+  rapidpro:
+    image: sdehaan/rapidpro:v4
+    container_name: rapidpro
+    depends_on:
+      - redis
+      - postgresql
+    ports:
+      - '8000:8000'
+    environment:
+      - DOMAIN_NAME=localhost
+      - ALLOWED_HOSTS=localhost
+      - TEMBA_HOST=localhost
+      - DJANGO_DEBUG=off
+      - DATABASE_URL=postgresql://postgres:postgres@postgresql/rapidpro
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=super-secret-key
+      - MANAGEPY_COLLECTSTATIC=on
+      - MANAGEPY_COMPRESS=on
+      - MANAGEPY_INIT_DB=on
+      - MANAGEPY_MIGRATE=on
+    networks:
+      - messaging-mediator-network
+  
+  celery_base:
+    image: sdehaan/rapidpro:v4
+    container_name: celery_base
+    depends_on:
+      - rapidpro
+    links:
+      - redis
+      - postgresql
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgresql/rapidpro
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=super-secret-key
+    command: ["/venv/bin/celery", "--beat", "--app=temba", "worker", "--loglevel=INFO", "--queues=celery,flows"]
+    networks:
+      - messaging-mediator-network
+  
+  celery_msgs:
+    image: sdehaan/rapidpro:v4
+    container_name: celery_msgs
+    depends_on:
+      - rapidpro
+    links:
+      - redis
+      - postgresql
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgresql/rapidpro
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=super-secret-key
+    command: ["/venv/bin/celery", "--app=temba", "worker", "--loglevel=INFO", "--queues=msgs,handler"]
+    networks:
+      - messaging-mediator-network
+  
+  redis:
+    image: redis:alpine
+    container_name: redis
+    networks:
+      - messaging-mediator-network
+  
+  postgresql:
+    image: mdillon/postgis:9.6
+    container_name: rapidpro_postgres
+    environment:
+      - POSTGRES_DB=rapidpro
+    networks:
+      - messaging-mediator-network
+
+  courier:
+    image: praekeltfoundation/courier
+    container_name: courier
+    depends_on:
+      - rapidpro
+    links:
+      - redis
+      - postgresql
+    environment:
+      - COURIER_DOMAIN=localhost
+      - COURIER_SPOOL_DIR=/tmp/courier/
+      - COURIER_DB=postgres://postgres:postgres@postgresql/rapidpro
+      - COURIER_REDIS=redis://redis:6379/8
+    networks:
+      - messaging-mediator-network
+  
 
 networks:
   messaging-mediator-network:
