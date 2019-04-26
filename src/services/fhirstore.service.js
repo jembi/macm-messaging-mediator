@@ -1,7 +1,7 @@
 'use strict'
 import axios from 'axios'
 import config from '../config'
-import { buildHearthUrl } from '../utils'
+import { buildHearthUrl, getResourceIdFromLocationHeader } from '../utils'
 import { fhirResources, configOptions } from '../constants'
 
 const addCommunicationRequest = async (resource) => {
@@ -13,7 +13,9 @@ const addCommunicationRequest = async (resource) => {
   })
 
   const response = await axios.post(hearthBaseUrl, resource)
-  return response.data
+  return {
+    communicationRequestReference: getResourceIdFromLocationHeader(response.headers.location)
+  }
 }
 
 const addCommunicationResource = resource => new Promise((resolve, reject) => resolve(resource))

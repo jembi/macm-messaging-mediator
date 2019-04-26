@@ -27,3 +27,9 @@ export const buildHearthUrl = ({ host, port, secured, path }) => {
 
   return `${protocol}://${host}:${port}/${fullPath}`
 }
+
+export const getResourceIdFromLocationHeader = location =>
+  location
+    .trim()
+    .split('/')
+    .filter(item => item !== '')[2]

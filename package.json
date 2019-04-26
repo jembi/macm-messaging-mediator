@@ -10,7 +10,7 @@
     "lint:fix": "node_modules/.bin/eslint src/ --fix",
     "test": "jest --coverage",
     "test:watch": "jest --watchAll",
-    "start": "NODE_ENV=development nodemon --exec babel-node src/"
+    "start": "nodemon --exec babel-node src/"
   },
   "repository": {
     "type": "git",

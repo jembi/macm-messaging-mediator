@@ -38,6 +38,8 @@ services:
         - HEARTH_PORT=3447
         - HEARTH_SCURED=false
         - PORT=3000
+    volumes:
+      - .:/code/
 
 networks:
   messaging-mediator-network:
