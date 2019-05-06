@@ -1,5 +1,5 @@
-'use strict'
-import { fhirResources } from '../constants'
+'use strict';
+import { fhirResources } from '../constants';
 
 export const validCommunicationRequest = {
   resourceType: fhirResources.COMMUNICATION_REQUEST,
@@ -40,4 +40,4 @@ export const validCommunicationRequest = {
   recipient: [{
     reference: '#requester'
   }]
-}
+};
