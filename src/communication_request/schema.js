@@ -4,7 +4,7 @@ import {
   fhirResources,
   statuses,
   fhirTelecomSystems,
-  fhirPriorities } from './constants'
+  fhirPriorities } from '../constants'
 
 const ALERT_REGEX = /^alert$/i
 

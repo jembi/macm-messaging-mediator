@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import app from './app'
 import http from 'http'
-import logger from './logger'
+import { logger } from './utils'
+import config from './config'
 
 const normalizePort = (val) => {
   const port = parseInt(val, 10)
@@ -46,7 +47,7 @@ const onListening = () => {
   logger.info(`Listening on ${bind}`)
 }
 
-const port = normalizePort(process.env.PORT || '3000')
+const port = normalizePort(config.get('port'))
 app.set('port', port)
 
 const server = http.createServer(app)
