@@ -18,10 +18,10 @@ export const fhirPriorities = {
   ROUTINE: 'routine'
 };
 
-export const configOptions = {
-  HEARTH_HOST: 'hearthHost',
-  HEARTH_PORT: 'hearthPort',
-  HEARTH_SCURED: 'hearthSecured',
-  NODE_ENV: 'env',
-  PORT: 'port'
-};
+export enum EnvKeys {
+  HearthHost = 'HEARTH_HOST',
+  HearthPort = 'HEARTH_PORT',
+  HearthSecured = 'HEARTH_SCURED',
+  NodeEnv = 'NODE_ENV',
+  Port = 'PORT'
+}

@@ -1,14 +1,14 @@
 'use strict';
 import axios from 'axios';
-import config from '../config';
+import { default as config } from 'nconf';
 import { buildHearthUrl, getResourceIdFromLocationHeader, PortNumber } from '../utils';
-import { fhirResources, configOptions } from '../constants';
+import { fhirResources, EnvKeys } from '../constants';
 
 const addCommunicationRequest = async (resource: Object) => {
   const hearthBaseUrl = buildHearthUrl({
-    host: config.get(configOptions.HEARTH_HOST) as string,
-    port: config.get(configOptions.HEARTH_PORT) as PortNumber,
-    secured: config.get(configOptions.HEARTH_SCURED) as boolean,
+    host: config.get(EnvKeys.HearthHost) as string,
+    port: config.get(EnvKeys.HearthPort) as PortNumber,
+    secured: config.get(EnvKeys.HearthSecured) as boolean,
     path: `fhir/${fhirResources.COMMUNICATION_REQUEST}`
   });
 
