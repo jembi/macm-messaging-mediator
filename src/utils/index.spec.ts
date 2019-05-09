@@ -1,4 +1,4 @@
-import { createOperationOutcome, OperationOutcomeIssue } from './utils';
+import { createOperationOutcome, OperationOutcomeIssue } from '.';
 
 describe('Utils', () => {
   describe('createOperationOutcome()', () => {
