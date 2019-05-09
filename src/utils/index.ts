@@ -1,6 +1,11 @@
 'use strict';
 import { createLogger, format, transports } from 'winston';
-import { PortNumber, OperationOutcomeIssue, OperationOutcome, UrlArgs } from './types';
+import {
+  OperationOutcomeIssue,
+  OperationOutcome,
+  UrlArgs,
+  SeverityAndCode,
+  StatusCode } from './types';
 
 const formatLog = format.printf(info =>
   info.message
@@ -42,3 +47,27 @@ export const getResourceIdFromLocationHeader = (location: string) =>
     .trim()
     .split('/')
     .filter((item: string) => item !== '')[2];
+
+/**
+ * Creates an object to be used for creating an OperationOutcome FHIR resource. This function builds the object based on
+ * the supplied HTTP status code.
+ *
+ * @throws {Error} When the HTTP status code is unkown.
+ * @param statusCode {StatusCode} - Supported HTTP status codes.
+ * @returns {SeverityAndCode}
+ */
+export const getSeverityAndCode = (statusCode: StatusCode): SeverityAndCode => {
+  if (!(statusCode as StatusCode)) {
+    throw new Error('The provided status code is not supported');
+  }
+
+  switch (statusCode) {
+    case 500:
+      return { severity: 'fatal', code: 'exception' };
+    case 400:
+    case 404:
+      return { severity: 'error', code: 'invalid' };
+    default:
+      return { severity: 'information', code: 'informational' };
+  }
+};

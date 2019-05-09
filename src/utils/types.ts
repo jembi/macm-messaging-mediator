@@ -1,9 +1,10 @@
 'use strict';
 
 export type OperationOutcomeIssueSeverity = 'information' | 'error' | 'fatal' | 'warning';
-export type OperationOutcomeIssueCode = 'informational' | 'exception';
+export type OperationOutcomeIssueCode = 'informational' | 'exception' | 'invalid';
 export type OperationOutComeResourceType = 'OperationOutcome';
 export type PortNumber = number | string;
+export type StatusCode = 500 | 400 | 202 | 404;
 
 export interface UrlArgs {
   host: string;
@@ -21,4 +22,9 @@ export interface OperationOutcomeIssue {
 export interface OperationOutcome {
   resourceType: OperationOutComeResourceType;
   issues: OperationOutcomeIssue[];
+}
+
+export interface SeverityAndCode {
+  severity: OperationOutcomeIssueSeverity;
+  code: OperationOutcomeIssueCode;
 }
