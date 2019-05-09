@@ -5,12 +5,16 @@ import * as R from 'ramda';
 import { Request, Response } from 'express';
 import { communicationRequestSchema } from './schema';
 import { fhirStore, rapidPro } from '../services';
+import { createOperationOutcome, getSeverityAndCode } from '../utils';
+import { OperationOutcomeIssue, SeverityAndCode, OperationOutcome } from '../utils/types';
+import { AddCommunicationRequestResponse } from './types';
 
-const createCommunicationResource = (communicationRequest: any) =>
+const createCommunicationResource = (communicationRequest: AddCommunicationRequestResponse) =>
   new Promise((resolve, reject) => resolve(communicationRequest));
 
-const createResponse = (communicationResource: any) =>
-  new Promise((resolve, reject) => resolve(communicationResource));
+const createResponse =
+  (communicationResource: AddCommunicationRequestResponse) : Promise<AddCommunicationRequestResponse> =>
+    new Promise((resolve, reject) => resolve(communicationResource));
 
 export const addCommunicationRequest = async (req: Request, res: Response, next: Function) => {
   const validationResult = Joi.validate(req.body || {}, communicationRequestSchema);
@@ -28,5 +32,14 @@ export const addCommunicationRequest = async (req: Request, res: Response, next:
   );
 
   const response = await sendMessage(req.body);
-  return res.status(202).json(response);
+  const severityAndCode : SeverityAndCode = getSeverityAndCode(202);
+  const issue : OperationOutcomeIssue = {
+    severity: severityAndCode.severity,
+    code: severityAndCode.code,
+    text: 'Accepted'
+  };
+
+  const operationOutcome : OperationOutcome = createOperationOutcome([issue]);
+  res.setHeader('Location', response.communicationRequestReference);
+  return res.status(202).json(operationOutcome);
 };

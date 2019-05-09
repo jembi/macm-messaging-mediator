@@ -2,10 +2,11 @@
 import axios from 'axios';
 import { default as config } from 'nconf';
 import { buildHearthUrl, getResourceIdFromLocationHeader } from '../utils';
-import  { PortNumber } from '../utils/types';
+import { PortNumber } from '../utils/types';
 import { fhirResources, EnvKeys } from '../constants';
+import { AddCommunicationRequestResponse } from '../communication_request/types';
 
-const addCommunicationRequest = async (resource: Object): Promise<any> =>
+const addCommunicationRequest = async (resource: Object): Promise<AddCommunicationRequestResponse> =>
   new Promise((resolve, reject) => {
     axios.post(
       buildHearthUrl({
@@ -16,13 +17,15 @@ const addCommunicationRequest = async (resource: Object): Promise<any> =>
       }),
       resource)
       .then(response => resolve({
-        communicationRequestReference: getResourceIdFromLocationHeader(response.headers.location)
+        communicationRequestReference:
+          `${fhirResources.COMMUNICATION_REQUEST}/${getResourceIdFromLocationHeader(response.headers.location)}`
       }))
       .catch(err => reject(err.message));
   });
 
-const addCommunicationResource = (resource: Object) =>
-  new Promise((resolve, reject) => resolve(resource));
+const addCommunicationResource =
+  (resource: AddCommunicationRequestResponse): Promise<AddCommunicationRequestResponse> =>
+    new Promise((resolve, reject) => resolve(resource));
 
 export default {
   addCommunicationRequest,
