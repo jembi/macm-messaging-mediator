@@ -1,7 +1,8 @@
 'use strict';
 import axios from 'axios';
 import { default as config } from 'nconf';
-import { buildHearthUrl, getResourceIdFromLocationHeader, PortNumber } from '../utils';
+import { buildHearthUrl, getResourceIdFromLocationHeader } from '../utils';
+import  { PortNumber } from '../utils/types';
 import { fhirResources, EnvKeys } from '../constants';
 
 const addCommunicationRequest = async (resource: Object) => {

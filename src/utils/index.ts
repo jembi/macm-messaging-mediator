@@ -1,5 +1,6 @@
 'use strict';
 import { createLogger, format, transports } from 'winston';
+import { PortNumber, OperationOutcomeIssue, OperationOutcome, UrlArgs } from './types';
 
 const formatLog = format.printf(info =>
   info.message
@@ -21,34 +22,12 @@ export const logger = createLogger({
 export const wrapHandler = (fn: Function) =>
   (req: any, res: any, next: any) => fn(req, res, next).catch(next);
 
-export interface UrlArgs {
-  host: string;
-  port: PortNumber;
-  secured: boolean;
-  path: string;
-}
-
 export const buildHearthUrl = ({ host, port, secured, path }: UrlArgs) => {
   const protocol = secured ? 'https' : 'http';
   const fullPath = (path && path.startsWith('/')) ? path.slice(1) : path;
 
   return `${protocol}://${host}:${port}/${fullPath}`;
 };
-
-type OperationOutcomeIssueSeverity = 'information' | 'error' | 'fatal' | 'warning';
-type OperationOutcomeIssueCode = 'informational' | 'exception';
-type OperationOutComeResourceType = 'OperationOutcome';
-
-export interface OperationOutcomeIssue {
-  severity: OperationOutcomeIssueSeverity;
-  code: OperationOutcomeIssueCode;
-  text: string;
-}
-
-export interface OperationOutcome {
-  resourceType: OperationOutComeResourceType;
-  issues: OperationOutcomeIssue[];
-}
 
 export const createOperationOutcome =
   (operationOutcomeIssues: OperationOutcomeIssue[]) : OperationOutcome => {
@@ -63,5 +42,3 @@ export const getResourceIdFromLocationHeader = (location: string) =>
     .trim()
     .split('/')
     .filter((item: string) => item !== '')[2];
-
-export type PortNumber = number | string;
