@@ -35,6 +35,29 @@ export const buildHearthUrl = ({ host, port, secured, path }: UrlArgs) => {
   return `${protocol}://${host}:${port}/${fullPath}`;
 };
 
+type OperationOutcomeIssueSeverity = 'information' | 'error' | 'fatal' | 'warning';
+type OperationOutcomeIssueCode = 'informational' | 'exception';
+type OperationOutComeResourceType = 'OperationOutcome';
+
+export interface OperationOutcomeIssue {
+  severity: OperationOutcomeIssueSeverity;
+  code: OperationOutcomeIssueCode;
+  text: string;
+}
+
+export interface OperationOutcome {
+  resourceType: OperationOutComeResourceType;
+  issues: OperationOutcomeIssue[];
+}
+
+export const createOperationOutcome =
+  (operationOutcomeIssues: OperationOutcomeIssue[]) : OperationOutcome => {
+    return {
+      resourceType: 'OperationOutcome',
+      issues: operationOutcomeIssues
+    };
+  };
+
 export const getResourceIdFromLocationHeader = (location: string) =>
   location
     .trim()
