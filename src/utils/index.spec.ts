@@ -9,7 +9,7 @@ describe('Utils', () => {
       ${'error'}       | ${'invalid'}       | ${'"CommunicationRequests" is not a valid FHIR resource!'}
     `('should return OperationOutcome resource given valid arguments',
       ({ severity, code, text }) => {
-        const operationOutComeIssues: OperationOutcomeIssue[] = [{ severity, code, text }];
+        const operationOutComeIssues: OperationOutcomeIssue[] = [{ severity, code, details: { text } }];
 
         const result = createOperationOutcome(operationOutComeIssues);
 
@@ -18,7 +18,7 @@ describe('Utils', () => {
         expect(result.issues.length).toBe(1);
         expect(result.issues[0].code).toBe(code);
         expect(result.issues[0].severity).toBe(severity);
-        expect(result.issues[0].text).toBe(text);
+        expect(result.issues[0].details.text).toBe(text);
       });
 
     test.each`

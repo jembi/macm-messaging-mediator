@@ -16,7 +16,9 @@ export interface UrlArgs {
 export interface OperationOutcomeIssue {
   severity: OperationOutcomeIssueSeverity;
   code: OperationOutcomeIssueCode;
-  text: string;
+  details: {
+    text: string;
+  };
 }
 
 export interface OperationOutcome {
