@@ -9,9 +9,12 @@ import {
 const ALERT_REGEX = /^alert$/i;
 
 const payloadSchema = {
-  title: Joi.string().max(50).required(),
-  'content-type': Joi.string().valid('text/plain').required(),
-  language: Joi.string().valid('en').required()
+  contentString: Joi.string().required(),
+  contentAttachment: Joi.object().keys({
+    title: Joi.string().max(50).required(),
+    'content-type': Joi.string().valid('text/plain').required(),
+    language: Joi.string().valid('en').required()
+  })
 };
 
 const telecomSchema = {

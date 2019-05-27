@@ -10,6 +10,7 @@ export const statuses = {
 
 export const fhirResources = {
   COMMUNICATION_REQUEST: 'CommunicationRequest',
+  COMMUNICATION: 'Communication',
   PRACTITIONER: 'Practitioner',
   ORGANIZATION: 'Organization'
 };
@@ -18,10 +19,13 @@ export const fhirPriorities = {
   ROUTINE: 'routine'
 };
 
-export const configOptions = {
-  HEARTH_HOST: 'hearthHost',
-  HEARTH_PORT: 'hearthPort',
-  HEARTH_SCURED: 'hearthSecured',
-  NODE_ENV: 'env',
-  PORT: 'port'
-};
+export enum EnvKeys {
+  HearthHost = 'HEARTH_HOST',
+  HearthPort = 'HEARTH_PORT',
+  HearthSecured = 'HEARTH_SCURED',
+  NodeEnv = 'NODE_ENV',
+  Port = 'PORT',
+  RapidProSmsFlowId = 'RAPIDPRO_SMS_FLOW_ID',
+  RapidProApiKey = 'RAPIDPRO_API_KEY',
+  RapidProApiUrl = 'RAPIDPRO_API_URL'
+}

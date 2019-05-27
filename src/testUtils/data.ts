@@ -1,29 +1,33 @@
 'use strict';
-import { fhirResources } from '../constants';
+import { CommunicationRequest } from '../communication_request/types';
 
-export const validCommunicationRequest = {
-  resourceType: fhirResources.COMMUNICATION_REQUEST,
+export const validCommunicationRequest : CommunicationRequest = {
+  resourceType: 'CommunicationRequest',
   status: 'active',
   contained: [{
-    resourceType: fhirResources.PRACTITIONER,
+    resourceType: 'Practitioner',
     id: 'practitioner',
+    name: 'John Doe',
     telecom: {
       use: 'official',
       system: 'phone',
       value: '+27731234567'
     }
   }, {
-    resourceType: fhirResources.ORGANIZATION,
+    resourceType: 'Organization',
     id: 'requester',
     name: 'National Department of Health'
   }
   ],
   payload: {
-    title: 'Test results available',
-    'content-type': 'text/plain',
-    language: 'en'
+    contentString: 'Text Message',
+    contentAttachment: {
+      title: 'Test results available',
+      'content-type': 'text/plain',
+      language: 'en'
+    }
   },
-  priority: 'routine',
+  priority: 'valid',
   category: [{
     coding: {
       system: '1.3.6.1.4.1.19376.1.2.5.1',
@@ -33,11 +37,13 @@ export const validCommunicationRequest = {
     text: 'Alert message'
   }
   ],
-  authoredOn: Date.now(),
-  requester: [{
-    reference: '#organization'
-  }],
+  authoredOn: new Date(),
+  requester: {
+    agent: {
+      reference: '#organization'
+    }
+  },
   recipient: [{
-    reference: '#requester'
+    reference: '#practitioner'
   }]
 };
