@@ -3,7 +3,7 @@ import app from './app';
 import http from 'http';
 import { logger } from './utils';
 import config from './config';
-import { configOptions } from './constants';
+import { EnvKeys } from './constants';
 
 const normalizePort = (val: any) => {
   const port = parseInt(val, 10);
@@ -44,7 +44,7 @@ const onListening = () => {
   const addr = server.address();
   const bind = typeof addr === 'string'
     ? `pipe  ${addr}`
-    : `port ${addr ? addr.port : config.get(configOptions.PORT)}`;
+    : `port ${addr ? addr.port : config.get(EnvKeys.Port)}`;
   logger.info(`Listening on ${bind}`);
 };
 

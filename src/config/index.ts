@@ -1,5 +1,5 @@
 'use strict';
-import { PortNumber } from '../utils';
+import { PortNumber } from '../utils/types';
 
 interface IConfig {
   [index: string]: string | number | boolean;
