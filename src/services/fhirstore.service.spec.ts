@@ -1,8 +1,34 @@
-import { getRecipientContactNumbers, getTextMessage } from './fhirstore.service';
+import {
+  getRecipientContactNumbers,
+  getTextMessage,
+  createAddCommunicationRequestResponse } from './fhirstore.service';
 import { validCommunicationRequest } from '../testUtils/data';
 import { CommunicationRequest } from '../communication_request/types';
 
 describe('FHIR Store service', () => {
+  describe('createAddCommunicationRequestResponse()', () => {
+    test('should correctly create response given valid CommunicationRequest', () => {
+      const resource = Object.assign({}, validCommunicationRequest);
+      const expectedReference = 'CommunicationRequest/5e592e41-b250-417f-85be-15b713fca823';
+      const expectedTextMessage = 'Test message';
+      resource.payload.contentString = expectedTextMessage;
+      const expectedContactNumber = 'tel:+27731234567';
+      // @ts-ignore
+      resource.contained[0].telecom.system = 'phone';
+      // @ts-ignore
+      resource.contained[0].telecom.value = '+27731234567';
+
+      const result = createAddCommunicationRequestResponse(expectedReference, resource);
+
+      expect(result).toBeDefined();
+      expect(result.communicationRequestReference).toBe(expectedReference);
+      expect(Array.isArray(result.contactNumbers)).toBe(true);
+      expect(result.contactNumbers.length).toBe(1);
+      expect(result.contactNumbers[0]).toBe(expectedContactNumber);
+      expect(result.text).toBe(expectedTextMessage);
+    });
+  });
+
   describe('getRecipientContactNumbers()', () => {
     // @ts-ignore
     let resource : CommunicationRequest = {};

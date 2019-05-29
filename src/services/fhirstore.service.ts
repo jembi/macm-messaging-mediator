@@ -40,7 +40,7 @@ export const getTextMessage = (resource: CommunicationRequest): string => resour
  * @param {CommunicationRequest} resource -
  * @returns {AddCommunicationRequestResponse}
  */
-const createAddCommunicationRequestResponse =
+export const createAddCommunicationRequestResponse =
   (communicationRequestReference: string, resource: CommunicationRequest) : AddCommunicationRequestResponse => ({
     communicationRequestReference,
     contactNumbers: getRecipientContactNumbers(resource),
