@@ -10,7 +10,8 @@
     "lint:fix": "node_modules/.bin/tslint src/**/**/*.ts --fix",
     "test": "jest --coverage",
     "test:watch": "jest --watchAll",
-    "start": "nodemon --exec ts-node src"
+    "start": "nodemon --exec ts-node src",
+    "start:production": "node lib/"
   },
   "repository": {
     "type": "git",
