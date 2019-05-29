@@ -1,6 +1,6 @@
 {
   "name": "rapidpro-messaging-mediator",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "RapidPro messaging mediator",
   "main": "lib/index.js",
   "scripts": {
