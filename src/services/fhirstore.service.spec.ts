@@ -1,4 +1,4 @@
-import { getRecipientContactNumbers } from './fhirstore.service';
+import { getRecipientContactNumbers, getTextMessage } from './fhirstore.service';
 import { validCommunicationRequest } from '../testUtils/data';
 import { CommunicationRequest } from '../communication_request/types';
 
@@ -67,6 +67,29 @@ describe('FHIR Store service', () => {
       expect(result).toBeDefined();
       expect(Array.isArray(result)).toBe(true);
       expect(result.length).toBe(0);
+    });
+  });
+
+  describe('getTextMessage()', () => {
+    test('should return the correct text message given no errors', () => {
+      const resource = Object.assign({}, validCommunicationRequest);
+      const expectedTextMessage = 'Test message';
+      resource.payload.contentString = expectedTextMessage;
+
+      const result = getTextMessage(resource);
+
+      expect(result).toBeDefined();
+      expect(result).toBe(expectedTextMessage);
+    });
+
+    test('should return an empty string given no text message', () => {
+      const resource = Object.assign({}, validCommunicationRequest);
+      delete resource.payload.contentString;
+
+      const result = getTextMessage(resource);
+
+      expect(result).toBeDefined();
+      expect(result).toBe('');
     });
   });
 });

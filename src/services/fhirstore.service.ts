@@ -29,8 +29,9 @@ export const getRecipientContactNumbers = (resource: CommunicationRequest) : str
  * Parses a CommunicationRequest resource and returns a text message string.
  *
  * @param {CommunicationRequest} resource - The resource containing the text message.
+ * @returns {string}
  */
-const getTextMessage = (resource: CommunicationRequest) => resource.payload.contentString;
+export const getTextMessage = (resource: CommunicationRequest): string => resource.payload.contentString || '';
 
 /**
  * Create a response object for the addCommunicationRequest function
