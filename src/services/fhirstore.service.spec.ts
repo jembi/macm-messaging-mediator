@@ -11,8 +11,20 @@ describe('FHIR Store service', () => {
       resource = Object.assign({}, validCommunicationRequest);
     });
 
-    test.skip('should return contact numbers given matching recipients with contact numbers', () => {
+    test('should return contact numbers given matching recipients with contact numbers', () => {
+      const expectedSystem = 'phone';
+      const expectedValue = 'tel:+27731234567';
+      // @ts-ignore
+      resource.contained[0].telecom.system = expectedSystem;
+      // @ts-ignore
+      resource.contained[0].telecom.value = '+27731234567';
 
+      const result = getRecipientContactNumbers(resource);
+
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toBe(1);
+      expect(result[0]).toBe(expectedValue);
     });
 
     test('should return an empty array given no contact numbers in resource', () => {
