@@ -14,7 +14,7 @@ import { CommunicationResource } from '../communication/types';
  * @returns {Array} - A collection of contact numbers.
  */
 export const getRecipientContactNumbers = (resource: CommunicationRequest) : string[] =>
-  resource.contained
+  resource && resource.contained ? resource.contained
     .filter(containedResource =>
       containedResource.id === resource.recipient[0].reference.substring(1) &&
         containedResource.telecom &&
@@ -22,7 +22,8 @@ export const getRecipientContactNumbers = (resource: CommunicationRequest) : str
         containedResource.telecom.value
     )
     .map(containedResource => containedResource.telecom &&
-      containedResource.telecom.value ? `tel:${containedResource.telecom.value}` : '');
+      containedResource.telecom.value ? `tel:${containedResource.telecom.value}` : '')
+    : [];
 
 /**
  * Parses a CommunicationRequest resource and returns a text message string.
