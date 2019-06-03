@@ -19,9 +19,9 @@ import communication from '../communication';
  * @param {AddCommunicationRequestResponse} addCommunicationRequestResponse - The data to map from
  * @returns {RapidProFlowBody}
  */
-const rapidProDataAdapter =
+export const rapidProDataAdapter =
   (addCommunicationRequestResponse: AddCommunicationRequestResponse) : RapidProFlowBody => {
-    if (!addCommunicationRequestResponse) {
+    if (!addCommunicationRequestResponse || Object.keys(addCommunicationRequestResponse).length === 0) {
       throw new Error('"addCommunicationRequestResponse" is required.');
     }
 
