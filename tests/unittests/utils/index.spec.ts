@@ -1,5 +1,5 @@
-import { createOperationOutcome, getSeverityAndCode, buildHearthUrl } from '.';
-import { OperationOutcomeIssue, UrlArgs } from './types';
+import { createOperationOutcome, getSeverityAndCode, buildHearthUrl } from '../../../src/utils';
+import { OperationOutcomeIssue, UrlArgs } from '../../../src/utils/types';
 
 describe('Utils', () => {
   describe('createOperationOutcome()', () => {

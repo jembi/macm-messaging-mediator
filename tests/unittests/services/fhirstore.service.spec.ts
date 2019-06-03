@@ -1,9 +1,9 @@
 import {
   getRecipientContactNumbers,
   getTextMessage,
-  createAddCommunicationRequestResponse } from './fhirstore.service';
-import { validCommunicationRequest } from '../testUtils/data';
-import { CommunicationRequest } from '../communication_request/types';
+  createAddCommunicationRequestResponse } from '../../../src/services/fhirstore.service';
+import { validCommunicationRequest } from '../../testUtils/data';
+import { CommunicationRequest } from '../../../src/communication_request/types';
 
 describe('FHIR Store service', () => {
   describe('createAddCommunicationRequestResponse()', () => {
