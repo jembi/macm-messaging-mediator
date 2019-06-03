@@ -1,11 +1,12 @@
 'use strict';
 import { createLogger, format, transports } from 'winston';
+import assert from 'assert';
 import {
   OperationOutcomeIssue,
   OperationOutcome,
   UrlArgs,
   SeverityAndCode,
-  StatusCode } from './types';
+  StatusCode} from './types';
 
 const formatLog = format.printf(info =>
   info.message
@@ -39,10 +40,17 @@ export const wrapHandler = (fn: Function) =>
  * @param {UrlArgs} param0 - Contains all the values for building a Hearth URL
  */
 export const buildHearthUrl = ({ host, port, secured, path }: UrlArgs) => {
+  // @ts-ignore
+  assert.ok(!isNaN(port) || typeof port === 'undefined', 'Port number must be numeric');
+  // @ts-ignore
+  assert.ok(typeof host === 'string' && typeof host !== 'undefined', 'Invalid host');
+
   const protocol = secured ? 'https' : 'http';
   const fullPath = (path && path.startsWith('/')) ? path.slice(1) : path;
 
-  return `${protocol}://${host}:${port}/${fullPath}`;
+  return (port && (typeof port === 'string' || typeof port === 'number'))
+    ? `${protocol}://${host}:${port}/${fullPath}`
+    : `${protocol}://${host}/${fullPath}`;
 };
 
 /**

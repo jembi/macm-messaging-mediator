@@ -1,5 +1,5 @@
-import { createOperationOutcome, getSeverityAndCode } from '.';
-import { OperationOutcomeIssue } from './types';
+import { createOperationOutcome, getSeverityAndCode, buildHearthUrl } from '.';
+import { OperationOutcomeIssue, UrlArgs } from './types';
 
 describe('Utils', () => {
   describe('createOperationOutcome()', () => {
@@ -48,6 +48,59 @@ describe('Utils', () => {
       expect(result).toBeDefined();
       expect(result.severity).toBe(expectedSeverity);
       expect(result.code).toBe(expectedCode);
+    });
+  });
+
+  describe('buildHearthUrl()', () => {
+    test.each`
+     secured       | path        | port         | expectedUrl
+     ${false}      | ${'/fhir'}  | ${3447}      | ${'http://localhost:3447/fhir'}
+     ${true}       | ${'/fhir'}  | ${'3447'}    | ${'https://localhost:3447/fhir'}
+     ${undefined}  | ${'/'}      | ${3447}      | ${'http://localhost:3447/'}
+     ${false}      | ${'fhir'}   | ${3447}      | ${'http://localhost:3447/fhir'}
+     ${false}      | ${'/fhir'}  | ${undefined} | ${'http://localhost/fhir'}
+    `('should return correctly formatted url given valid args', ({ secured, path, port, expectedUrl }) => {
+      const urlArgs : UrlArgs = {
+        secured,
+        path,
+        port,
+        host: 'localhost'
+      };
+
+      const result = buildHearthUrl(urlArgs);
+
+      expect(result).toBeDefined();
+      expect(result).toEqual(expectedUrl);
+    });
+
+    test('should throw Error given non-numeric port number', () => {
+      const urlArgs : UrlArgs = {
+        secured: false,
+        path: '/fhir',
+        port: 'port number',
+        host: 'localhost'
+      };
+
+      expect(() => buildHearthUrl(urlArgs)).toThrowError('Port number must be numeric');
+    });
+
+    test.each`
+      host
+      ${null}
+      ${undefined}
+      ${['localhost']}
+      ${{ host: 'localhost' }}
+      ${() => 'localhost'}
+      ${1234}
+    `('should throw Error given "$host" for host', ({ host }) => {
+      const urlArgs : UrlArgs = {
+        host,
+        port: 3447,
+        path: '/fhir',
+        secured: false
+      };
+
+      expect(() => buildHearthUrl(urlArgs)).toThrowError('Invalid host');
     });
   });
 });
