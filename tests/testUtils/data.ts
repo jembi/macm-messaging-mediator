@@ -27,7 +27,7 @@ export const validCommunicationRequest : CommunicationRequest = {
       language: 'en'
     }
   },
-  priority: 'valid',
+  priority: 'routine',
   category: [{
     coding: {
       system: '1.3.6.1.4.1.19376.1.2.5.1',
@@ -39,9 +39,7 @@ export const validCommunicationRequest : CommunicationRequest = {
   ],
   authoredOn: new Date(),
   requester: {
-    agent: {
-      reference: '#organization'
-    }
+    reference: '#organization'
   },
   recipient: [{
     reference: '#practitioner'

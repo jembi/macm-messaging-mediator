@@ -2,7 +2,7 @@
 
 type CommunicationResourceValue = 'CommunicationRequest';
 type ReferenceResource = 'Practitioner' | 'Organization';
-type Routine = 'valid';
+type Priority = 'routine';
 
 export interface AddCommunicationRequestResponse {
   communicationRequestReference: string;
@@ -45,10 +45,6 @@ interface ContainedResource {
   telecom?: Telecom;
 }
 
-interface Requester {
-  agent: Reference;
-}
-
 /**
  * FHIR CommunicaitonRequest resource
  */
@@ -57,9 +53,9 @@ export interface CommunicationRequest {
   status: string;
   payload: Payload;
   contained: ContainedResource[];
-  priority: Routine;
+  priority: Priority;
   category: Category[];
   authoredOn: Date;
-  requester: Requester;
+  requester: Reference;
   recipient: Reference[];
 }

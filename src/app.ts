@@ -17,7 +17,7 @@ export const resourceNotFoundHandler = (req: Request, res: Response, next: Funct
 export const errorHandler = (err: any, req: Request, res: Response, next: Function) => {
   const statusCode : StatusCode = err.status || 500;
   const severityAndCode : SeverityAndCode = getSeverityAndCode(statusCode);
-  const issueText : any = (statusCode === 500 && config.get(EnvKeys.NodeEnv) !== 'development')
+  const issueText : any = (statusCode === 500 && config.get(EnvKeys.NodeEnv) === 'production')
     ? 'Internal Server Error' : err.message || err;
 
   logger.error(err.message || err);

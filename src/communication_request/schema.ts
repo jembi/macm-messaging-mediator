@@ -54,6 +54,6 @@ export const communicationRequestSchema = Joi.object({
   priority: Joi.string().valid(fhirPriorities.ROUTINE),
   category: Joi.array().items(categorySchema).length(1),
   authoredOn: Joi.date().required(),
-  requester: Joi.array().items(referenceSchema).length(1),
+  requester: Joi.object().keys(referenceSchema),
   recipient: Joi.array().items(referenceSchema).length(1)
 });
