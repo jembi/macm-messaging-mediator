@@ -4,16 +4,16 @@ import { CommunicationResource } from '../communication/types';
 
 export interface IChannel {
   /**
-   * Processes a CommunicationRequest and sends an alert/notification. 
-   * 
+   * Processes a CommunicationRequest and sends an alert/notification.
+   *
    * @param {CommunicationRequest} communicationRequest
    * @return {Promise<CommunicationResource>}
    */
   processNotifaction(communicationRequest: CommunicationRequest) : Promise<CommunicationResource>;
 
   /**
-   * Processes an API callback from the implemented messaging service. 
-   * 
+   * Processes an API callback from the implemented messaging service.
+   *
    * @param {any} data
    * @returns {Promise<CommunicationResource>}
    */
@@ -22,7 +22,7 @@ export interface IChannel {
   /**
    * Processes a request for the delivery status of an alert/notification.
    * NOTE: This is an implementation of the IHE mACM profile transaction ITI-85
-   * 
+   *
    * @param {string} communicationRequestId
    * @returns {Promise<CommunicationResource>}
    */

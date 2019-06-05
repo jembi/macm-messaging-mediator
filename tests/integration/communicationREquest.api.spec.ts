@@ -16,7 +16,7 @@ describe('CommunicationRequest API', () => {
 
     const setupSuccessfulRequest = () => {
       // @ts-ignore
-      config.get = jest.fn().mockImplementation(() => 'test')
+      config.get = jest.fn().mockImplementation(() => 'test');
       // @ts-ignore
       services.fhirStore.addCommunicationRequest = jest.fn().mockImplementation(() =>
         Promise.resolve({
@@ -34,7 +34,7 @@ describe('CommunicationRequest API', () => {
 
     const setupInternalServerRequest = () => {
       // @ts-ignore
-      config.get = jest.fn().mockImplementation(() => 'test')
+      config.get = jest.fn().mockImplementation(() => 'test');
       // @ts-ignore
       services.fhirStore.addCommunicationRequest = jest.fn().mockImplementation(() =>
         Promise.reject(new Error('Connection refused')));
@@ -55,7 +55,7 @@ describe('CommunicationRequest API', () => {
           'information',
           'Accepted'
         );
-        
+
         const response = await agent.post('/CommunicationRequest').send(body);
 
         expect(response).toBeDefined();
@@ -80,7 +80,7 @@ describe('CommunicationRequest API', () => {
         expect(result.status).toBe(400);
         expect(result.body).toEqual(expectedResponse);
       });
-      
+
       test('should return status 500 given an internal server error', async () => {
         const body = Object.assign({}, validCommunicationRequest);
         setupInternalServerRequest();
@@ -99,4 +99,3 @@ describe('CommunicationRequest API', () => {
     });
   });
 });
-
