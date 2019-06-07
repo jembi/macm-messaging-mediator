@@ -28,3 +28,31 @@ export interface IChannel {
    */
   processStatusRequest(communicationRequestId: string) : Promise<CommunicationResource>;
 }
+
+/**
+ * Represents parameters for an sms to be sent by channel.
+ */
+export interface ISmsrequest {
+  to: string;
+  body: string;
+}
+
+/**
+ * Represents a response from a channel.
+ * NOTE: the status property should be that which acceptable in FHIR STU 3 Communication resource.
+ */
+export interface ISmsResponse {
+  id: string;
+  status: 'in-progress' | 'completed' | 'entered-in-error';
+  sent: Date;
+}
+
+export interface ISmsChannel {
+  /**
+   * Sends an sms to a given recipient.
+   *
+   * @param {ISmsrequest} request
+   * @return {Promise<ISmsResponse>}
+   */
+  send(request: ISmsrequest) : Promise<ISmsResponse>;
+}
