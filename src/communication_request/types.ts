@@ -49,6 +49,7 @@ interface ContainedResource {
  * FHIR CommunicaitonRequest resource
  */
 export interface CommunicationRequest {
+  id?: string;
   resourceType: CommunicationResourceValue;
   status: string;
   payload: Payload;
