@@ -7,10 +7,16 @@ interface Reference {
   reference: string;
 }
 
+interface Identifier {
+  system: string;
+  value: string;
+}
+
 /**
  * FHIR Communication Resource.
  */
 export interface CommunicationResource {
+  identifier: Identifier[];
   resourceType: ResourceType;
   status: Status;
   basedOn: Reference;

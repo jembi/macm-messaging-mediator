@@ -45,6 +45,7 @@ export interface ISmsResponse {
   id: string;
   status: 'in-progress' | 'completed' | 'entered-in-error';
   sent: Date;
+  identifierSystem: string;
 }
 
 export interface ISmsChannel {

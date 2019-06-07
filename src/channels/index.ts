@@ -38,6 +38,10 @@ const createSmsRequest = (communicationRequest: CommunicationRequest) : ISmsrequ
 
 const fromSmsResponseToCommunicationResource =
   (data: ISmsResponse, communicationRequestReference: string): CommunicationResource => ({
+    identifier: [{
+      system: data.identifierSystem,
+      value: data.id
+    }],
     resourceType: 'Communication',
     status: data.status,
     basedOn: {

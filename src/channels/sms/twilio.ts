@@ -29,7 +29,8 @@ const getMessageStatus = (status: string) => {
 const toSmsResponse = (message: any) : ISmsResponse => ({
   id: message.sid,
   sent: message.dateCreated,
-  status: getMessageStatus(message.status)
+  status: getMessageStatus(message.status),
+  identifierSystem: 'macm:sms:twilio'
 });
 
 const send = (request: ISmsrequest) : Promise<ISmsResponse> =>
