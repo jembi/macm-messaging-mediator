@@ -101,3 +101,11 @@ export const getSeverityAndCode = (statusCode: StatusCode): SeverityAndCode => {
       return { severity: 'information', code: 'informational' };
   }
 };
+
+/**
+ * Deep clones an object
+ *
+ * @param {Object} source - Object to deep clone
+ * @returns {Object}
+ */
+export const deepClone = (source: Object) : Object => JSON.parse(JSON.stringify(source));
