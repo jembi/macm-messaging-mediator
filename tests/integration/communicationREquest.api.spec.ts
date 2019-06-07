@@ -3,12 +3,12 @@ import { default as request } from 'supertest';
 import { validCommunicationRequest } from '../testUtils/data';
 import app from '../../src/app';
 import * as services from '../../src/services';
-import * as rapidProService from '../../src/channels/rapidpro';
+import { default as channel } from '../../src/channels';
 import { createOperationOutcome } from '../testUtils';
 
 jest.mock('../../src/config');
 jest.mock('../../src/services');
-jest.mock('../../src/channels/rapidpro');
+jest.mock('../../src/channels');
 
 describe('CommunicationRequest API', () => {
   describe('Integration tests', () => {
@@ -29,7 +29,7 @@ describe('CommunicationRequest API', () => {
       services.fhirStore.addCommunicationResource = jest.fn().mockImplementation(() => Promise.resolve({}));
 
       // @ts-ignore
-      rapidProService.send = jest.fn().mockImplementation(() => Promise.resolve({}));
+      channel.send = jest.fn().mockImplementation(() => Promise.resolve({}));
     };
 
     const setupInternalServerRequest = () => {
@@ -43,7 +43,7 @@ describe('CommunicationRequest API', () => {
       services.fhirStore.addCommunicationResource = jest.fn().mockImplementation(() => Promise.resolve({}));
 
       // @ts-ignore
-      rapidProService.send = jest.fn().mockImplementation(() => Promise.resolve({}));
+      channel.send = jest.fn().mockImplementation(() => Promise.resolve({}));
     };
 
     describe('POST', () => {
