@@ -1,11 +1,12 @@
 'use strict';
 import { default as config } from 'nconf';
 import path from 'path';
+import express from 'express';
 
-config.argv().env();
+const app = express();
+
 const environnment = config.get('NODE_ENV') || 'development';
-
-config.file('environment', path.resolve('../config', `${environnment}.json`));
-config.file('default', path.resolve('../config', 'default.json'));
+const configPath = path.join(path.resolve(__dirname, '../', 'config'), `${environnment}.json`);
+config.argv().env().file('environment', configPath);
 
 export default Object.assign({}, { get: (key: string) : any => config.get(key) });
