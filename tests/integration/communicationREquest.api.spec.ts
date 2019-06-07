@@ -1,4 +1,4 @@
-import { default as config } from 'nconf';
+import config from '../../src/config';
 import { default as request } from 'supertest';
 import { validCommunicationRequest } from '../testUtils/data';
 import app from '../../src/app';
@@ -6,7 +6,7 @@ import * as services from '../../src/services';
 import * as rapidProService from '../../src/channels/rapidpro';
 import { createOperationOutcome } from '../testUtils';
 
-jest.mock('nconf');
+jest.mock('../../src/config');
 jest.mock('../../src/services');
 jest.mock('../../src/channels/rapidpro');
 

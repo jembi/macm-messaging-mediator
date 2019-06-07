@@ -1,7 +1,7 @@
 'use strict';
 import { default as createError } from 'http-errors';
 import * as Joi from 'joi';
-import { default as config } from 'nconf';
+import config from '../config';
 import { Request, Response } from 'express';
 import { communicationRequestSchema } from './schema';
 import { fhirStore } from '../services';

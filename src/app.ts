@@ -1,7 +1,7 @@
 'use strict';
 import express, { Request, Response } from 'express';
 import helmet from 'helmet';
-import { default as config } from 'nconf';
+import config from './config';
 import { default as createError } from 'http-errors';
 import { default as communicationRequest } from './communication_request';
 import { default as communication } from './communication';
