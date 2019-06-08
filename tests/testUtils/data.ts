@@ -43,5 +43,9 @@ export const validCommunicationRequest : CommunicationRequest = {
   },
   recipient: [{
     reference: '#practitioner'
+  }],
+  extension : [{
+    url : 'CommunicationRequest.channel',
+    valueString : 'sms:twilio'
   }]
 };
