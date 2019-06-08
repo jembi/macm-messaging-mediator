@@ -45,6 +45,11 @@ interface ContainedResource {
   telecom?: Telecom;
 }
 
+interface Extension {
+  url: string;
+  valueString: string;
+}
+
 /**
  * FHIR CommunicaitonRequest resource
  */
@@ -59,4 +64,5 @@ export interface CommunicationRequest {
   authoredOn: Date;
   requester: Reference;
   recipient: Reference[];
+  extension?: Extension[];
 }
