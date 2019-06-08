@@ -1,15 +1,15 @@
 'use strict';
-import { CommunicationRequest } from '../communication_request/types';
+
 import { CommunicationResource } from '../communication/types';
 
 export interface IChannel {
   /**
-   * Processes a CommunicationRequest and sends an alert/notification.
+   * Processes a INotificationRequest and sends an alert/notification.
    *
-   * @param {CommunicationRequest} communicationRequest
+   * @param {INotificationRequest} notificationRequest
    * @return {Promise<CommunicationResource>}
    */
-  processNotifaction(communicationRequest: CommunicationRequest) : Promise<CommunicationResource>;
+  processNotification(notificationRequest: INotificationRequest) : Promise<INotificationResponse>;
 
   /**
    * Processes an API callback from the implemented messaging service.
@@ -30,9 +30,9 @@ export interface IChannel {
 }
 
 /**
- * Represents parameters for an sms to be sent by channel.
+ * Represents parameters for a notification to be sent by channel.
  */
-export interface ISmsrequest {
+export interface INotificationRequest {
   to: string;
   body: string;
   props: Object;
@@ -42,24 +42,14 @@ export interface ISmsrequest {
  * Represents a response from a channel.
  * NOTE: the status property should be that which acceptable in FHIR STU 3 Communication resource.
  */
-export interface ISmsResponse {
+export interface INotificationResponse {
   id: string;
   status: 'in-progress' | 'completed' | 'entered-in-error';
   sent: Date;
   identifierSystem: string;
 }
 
-export interface ISmsChannel {
-  /**
-   * Sends an sms to a given recipient.
-   *
-   * @param {ISmsrequest} request
-   * @return {Promise<ISmsResponse>}
-   */
-  send(request: ISmsrequest) : Promise<ISmsResponse>;
-}
-
-export interface ChannelConfig{
+export interface ChannelConfig {
   type: string;
   default?: boolean;
   services: ChannelService[];

@@ -1,7 +1,7 @@
 'use strict';
 import { default as Twilio } from 'twilio';
 import { CommunicationResource } from '../../communication/types';
-import { ISmsrequest, ISmsResponse, ISmsChannel } from '../types';
+import { INotificationRequest, INotificationResponse, IChannel } from '../types';
 import { MessageInstance } from 'twilio/lib/rest/chat/v2/service/channel/message';
 
 interface Props {
@@ -26,33 +26,30 @@ const getMessageStatus = (status: string) => {
   }
 };
 
-const toSmsResponse = (message: any) : ISmsResponse => ({
+const toSmsResponse = (message: any) : INotificationResponse => ({
   id: message.sid,
   sent: message.dateCreated,
   status: getMessageStatus(message.status),
   identifierSystem: 'macm:sms:twilio'
 });
 
-const send = (request: ISmsrequest) : Promise<ISmsResponse> =>
-  new Promise((resolve, reject) => {
-    const props = request.props as Props;
-    const client = Twilio(props.sid, props.token);
+const channel: IChannel = {
+  processNotification: (notificationRequest: INotificationRequest) : Promise<INotificationResponse> =>
+    new Promise((resolve, reject) => {
+      const props = notificationRequest.props as Props;
+      const client = Twilio(props.sid, props.token);
 
-    client.messages.create({ from: props.from, to: request.to, body: request.body })
-    // @ts-ignore
-    .then((message: MessageInstance) => resolve(toSmsResponse(message)))
-    .catch(reject);
-  });
+      client.messages.create({ from: props.from, to: notificationRequest.to, body: notificationRequest.body })
+      // @ts-ignore
+      .then((message: MessageInstance) => resolve(toSmsResponse(message)))
+      .catch(reject);
+    }),
 
-// TODO: Implment as part of the ISmsChannel interface
-const  processWebhook = (data: any) : Promise<CommunicationResource> => Promise.reject(new Error('Not implemented'));
-// TODO: Implment as part of the ISmsChannel interface
-const processStatusRequest = (communicationRequestId: string) : Promise<CommunicationResource> =>
-  Promise.reject(new Error('Not implemented'));
-
-// @ts-ignore
-const channel : ISmsChannel = {
-  send
+  // TODO: Implment as part of the ISmsChannel interface
+  processWebhook: (data: any) : Promise<CommunicationResource> => Promise.reject(new Error('Not implemented')),
+  // TODO: Implment as part of the ISmsChannel interface
+  processStatusRequest: (communicationRequestId: string) : Promise<CommunicationResource> =>
+    Promise.reject(new Error('Not implemented'))
 };
 
 export default channel;

@@ -3,7 +3,7 @@ import { default as request } from 'supertest';
 import { validCommunicationRequest } from '../testUtils/data';
 import app from '../../src/app';
 import * as services from '../../src/services';
-import { default as channel } from '../../src/channels';
+import { default as channel } from '../../src/channels/sms/twilio';
 import { createOperationOutcome } from '../testUtils';
 
 jest.mock('../../src/config');
@@ -29,7 +29,7 @@ describe('CommunicationRequest API', () => {
       services.fhirStore.addCommunicationResource = jest.fn().mockImplementation(() => Promise.resolve({}));
 
       // @ts-ignore
-      channel.send = jest.fn().mockImplementation(() => Promise.resolve({}));
+      channel.processNotification = jest.fn().mockImplementation(() => Promise.resolve({}));
     };
 
     const setupInternalServerRequest = () => {

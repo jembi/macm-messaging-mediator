@@ -5,7 +5,7 @@ import config from '../config';
 import { Request, Response } from 'express';
 import { communicationRequestSchema } from './schema';
 import { fhirStore } from '../services';
-import { default as channel } from '../channels';
+import { processCommunicationRequest } from '../channels';
 import { createOperationOutcome, getSeverityAndCode, deepClone } from '../utils';
 import { OperationOutcomeIssue, SeverityAndCode, OperationOutcome } from '../utils/types';
 import { AddCommunicationRequestResponse, CommunicationRequest } from './types';
@@ -45,7 +45,7 @@ export const addCommunicationRequest = async (req: Request, res: Response, next:
   const updatedCommunicationRequest = deepClone(req.body) as CommunicationRequest;
   updatedCommunicationRequest.id = addCommunicationRequestResponse.communicationRequestReference.split('/')[1];
 
-  const communication = await channel.processNotifaction(updatedCommunicationRequest);
+  const communication = await processCommunicationRequest(updatedCommunicationRequest);
   await fhirStore.addCommunicationResource(communication);
 
   const severityAndCode : SeverityAndCode = getSeverityAndCode(202);
