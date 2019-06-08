@@ -1,5 +1,5 @@
 'use strict';
-import { getRecipientContactNumbers, getTextMessage } from '../../../src/channels';
+import { getRecipientContactNumbers, getTextMessage } from '../../../src/channels/sms';
 import { validCommunicationRequest } from '../../testUtils/data';
 
 describe('Channels', () => {
