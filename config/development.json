@@ -1,11 +1,15 @@
 {
-  "channels": {
-    "sms": {
-      "twilio": {
+  "channels": [{
+    "type": "sms",
+    "default": true,
+    "services": [{
+      "default": true,
+      "name": "twilio",
+      "props": {
         "token": "",
         "sid": "",
         "from": ""
       }
-    }
-  }
+    }]
+  }]
 }

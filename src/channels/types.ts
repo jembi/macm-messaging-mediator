@@ -35,6 +35,7 @@ export interface IChannel {
 export interface ISmsrequest {
   to: string;
   body: string;
+  props: Object;
 }
 
 /**
@@ -56,4 +57,16 @@ export interface ISmsChannel {
    * @return {Promise<ISmsResponse>}
    */
   send(request: ISmsrequest) : Promise<ISmsResponse>;
+}
+
+export interface ChannelConfig{
+  type: string;
+  default?: boolean;
+  services: ChannelService[];
+}
+
+export interface ChannelService {
+  default?: boolean;
+  name: string;
+  props: any;
 }
