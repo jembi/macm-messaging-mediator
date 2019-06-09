@@ -43,9 +43,11 @@ export const getRecipientContactNumbers = (resource: CommunicationRequest): stri
  */
 export const getTextMessage = (resource: CommunicationRequest): string => resource.payload.contentString || '';
 
-export const createNotificationRequest = (communicationRequest: CommunicationRequest, props: Object): INotificationRequest => ({
-  props,
-  body: getTextMessage(communicationRequest),
-  // TODO: Change sms channel to handle mupltiple contact numbers.
-  to: getRecipientContactNumbers(communicationRequest)[0]
-});
+export const createNotificationRequest =
+  (communicationRequest: CommunicationRequest, props: Object): INotificationRequest =>
+    ({
+      props,
+      body: getTextMessage(communicationRequest),
+      // TODO: Change sms channel to handle mupltiple contact numbers.
+      to: getRecipientContactNumbers(communicationRequest)[0]
+    });

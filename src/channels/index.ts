@@ -33,13 +33,14 @@ export const processCommunicationRequest = (resource: CommunicationRequest)
   : Promise<CommunicationResource> => {
   const { channelType, service } = getChannelAndService(resource);
   console.log(channelType);
-  
+
   const channel = require(`./${channelType.type}/${service.name}`);
   switch (channelType.type) {
     case 'sms':
       const smsChannel = channel.default as IChannel;
       console.log(smsChannel);
-      return new Promise((resolve, reject) => smsChannel.processNotification(createNotificationRequest(resource, service.props))
+      return new Promise((resolve, reject) =>
+        smsChannel.processNotification(createNotificationRequest(resource, service.props))
         .then((response: INotificationResponse) =>
           resolve(fromNotificationResponseToCommunicationResource(response, `CommunicationRequest/${resource.id}`)))
         .catch(reject));
@@ -48,7 +49,8 @@ export const processCommunicationRequest = (resource: CommunicationRequest)
   }
 };
 
-export const processWebhook = (data: any): Promise<CommunicationResource> => Promise.reject(new Error('Not implemented'));
+export const processWebhook = (data: any): Promise<CommunicationResource> =>
+  Promise.reject(new Error('Not implemented'));
 
 export const processStatusRequest = (communicationRequestId: string): Promise<CommunicationResource> =>
     Promise.reject(new Error('Not implemented'));
