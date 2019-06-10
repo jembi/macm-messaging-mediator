@@ -2,10 +2,10 @@
 import { default as config } from '../../src/config';
 import { CommunicationRequest } from '../communication_request/types';
 import { CommunicationResource } from '../communication/types';
-import { ISmsResponse, IChannel, ChannelConfig, ChannelService, ISmsChannel } from './types';
-import { createSmsRequest, fromSmsResponseToCommunicationResource } from './sms';
+import { INotificationResponse, IChannel, ChannelConfig, ChannelService } from './types';
+import { createNotificationRequest, fromNotificationResponseToCommunicationResource } from './sms';
 
-const getChannelAndService = (resource: CommunicationRequest) => {
+export const getChannelAndService = (resource: CommunicationRequest) => {
   const channelConfig: ChannelConfig[] = config.get('channels') ||
     (() => { throw new Error('Missing configuration for "channels"'); });
 
@@ -24,36 +24,31 @@ const getChannelAndService = (resource: CommunicationRequest) => {
     (() => { throw new Error('No default service'); })();
 
   return {
-    channel: matchedChannel,
+    channelType: matchedChannel,
     service: matchedService
   };
 };
 
-const sendNotification = (resource: CommunicationRequest, channelType: string, service: ChannelService)
+export const processCommunicationRequest = (resource: CommunicationRequest)
   : Promise<CommunicationResource> => {
-  const channel = require(`./${channelType}/${service.name}`);
+  const { channelType, service } = getChannelAndService(resource);
 
-  switch (channelType) {
+  const channel = require(`./${channelType.type}/${service.name}`);
+  switch (channelType.type) {
     case 'sms':
-      const smsChannel = channel as ISmsChannel;
-      return new Promise((resolve, reject) => smsChannel.send(createSmsRequest(resource, service.props))
-        .then((response: ISmsResponse) =>
-          resolve(fromSmsResponseToCommunicationResource(response, `CommunicationRequest/${resource.id}`)))
+      const smsChannel = channel.default as IChannel;
+      return new Promise((resolve, reject) =>
+        smsChannel.processNotification(createNotificationRequest(resource, service.props))
+        .then((response: INotificationResponse) =>
+          resolve(fromNotificationResponseToCommunicationResource(response, `CommunicationRequest/${resource.id}`)))
         .catch(reject));
     default:
       return Promise.reject(new Error(`Unknown channel channel type ${channelType}`));
   }
 };
 
-const channel: IChannel = {
-  processNotifaction: (resource: CommunicationRequest): Promise<CommunicationResource> => {
-    const { channel, service } = getChannelAndService(resource);
-    return sendNotification(resource, channel.type, service);
-  },
+export const processWebhook = (data: any): Promise<CommunicationResource> =>
+  Promise.reject(new Error('Not implemented'));
 
-  processWebhook: (data: any): Promise<CommunicationResource> => Promise.reject(new Error('Not implemented')),
-  processStatusRequest: (communicationRequestId: string): Promise<CommunicationResource> =>
-    Promise.reject(new Error('Not implemented'))
-};
-
-export default channel;
+export const processStatusRequest = (communicationRequestId: string): Promise<CommunicationResource> =>
+    Promise.reject(new Error('Not implemented'));

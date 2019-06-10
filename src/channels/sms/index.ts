@@ -1,10 +1,10 @@
 'use strict';
-import { ISmsResponse, ISmsrequest } from '../types';
+import { INotificationResponse, INotificationRequest } from '../types';
 import { CommunicationResource } from '../../communication/types';
 import { CommunicationRequest } from '../../communication_request/types';
 
-export const fromSmsResponseToCommunicationResource =
-  (data: ISmsResponse, communicationRequestReference: string): CommunicationResource => ({
+export const fromNotificationResponseToCommunicationResource =
+  (data: INotificationResponse, communicationRequestReference: string): CommunicationResource => ({
     identifier: [{
       system: data.identifierSystem,
       value: data.id
@@ -43,9 +43,11 @@ export const getRecipientContactNumbers = (resource: CommunicationRequest): stri
  */
 export const getTextMessage = (resource: CommunicationRequest): string => resource.payload.contentString || '';
 
-export const createSmsRequest = (communicationRequest: CommunicationRequest, props: Object): ISmsrequest => ({
-  props,
-  body: getTextMessage(communicationRequest),
-  // TODO: Change sms channel to handle mupltiple contact numbers.
-  to: getRecipientContactNumbers(communicationRequest)[0]
-});
+export const createNotificationRequest =
+  (communicationRequest: CommunicationRequest, props: Object): INotificationRequest =>
+    ({
+      props,
+      body: getTextMessage(communicationRequest),
+      // TODO: Change sms channel to handle mupltiple contact numbers.
+      to: getRecipientContactNumbers(communicationRequest)[0]
+    });
