@@ -32,13 +32,11 @@ export const getChannelAndService = (resource: CommunicationRequest) => {
 export const processCommunicationRequest = (resource: CommunicationRequest)
   : Promise<CommunicationResource> => {
   const { channelType, service } = getChannelAndService(resource);
-  console.log(channelType);
 
   const channel = require(`./${channelType.type}/${service.name}`);
   switch (channelType.type) {
     case 'sms':
       const smsChannel = channel.default as IChannel;
-      console.log(smsChannel);
       return new Promise((resolve, reject) =>
         smsChannel.processNotification(createNotificationRequest(resource, service.props))
         .then((response: INotificationResponse) =>
