@@ -1,6 +1,6 @@
 'use strict';
-import axios from 'axios';
 import config from '../../config';
+import axios, { AxiosRequestConfig } from 'axios';
 import { EnvKeys } from '../../constants';
 import { RapidProFlowBody, SendResponse } from './types';
 
@@ -12,7 +12,7 @@ import { RapidProFlowBody, SendResponse } from './types';
  */
 export const send = (data: RapidProFlowBody) : Promise<SendResponse> =>
   new Promise((resolve, reject) => {
-    const axiosConfig = {
+    const axiosConfig : AxiosRequestConfig = {
       data,
       url: `${config.get(EnvKeys.RapidProApiUrl)}/flow_starts.json`,
       method: 'post',
@@ -21,14 +21,11 @@ export const send = (data: RapidProFlowBody) : Promise<SendResponse> =>
       }
     };
 
-    axios(axiosConfig).then((response) => {
-      const res : SendResponse = {
-        id: response.data.id,
-        uuid: response.data.uuid,
-        status: response.data.status,
-        created_on: response.data.created_on,
-        modified_on: response.data.modified_on
-      };
-      resolve(res);
-    }).catch(reject);
+    axios(axiosConfig).then((response: any) => resolve({
+      id: response.data.id,
+      uuid: response.data.uuid,
+      status: response.data.status,
+      created_on: response.data.created_on,
+      modified_on: response.data.modified_on
+    } as SendResponse)).catch(reject);
   });
