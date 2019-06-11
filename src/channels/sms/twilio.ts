@@ -8,6 +8,7 @@ interface Props {
   sid: string;
   token: string;
   from: string;
+  statusCallback: string;
 }
 
 const getMessageStatus = (status: string) => {
