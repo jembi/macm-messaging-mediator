@@ -1,9 +1,11 @@
 'use strict';
+import express, { Request, Response } from 'express';
 import { default as config } from '../../src/config';
 import { CommunicationRequest } from '../communication_request/types';
 import { CommunicationResource } from '../communication/types';
 import { INotificationResponse, IChannel, ChannelConfig, ChannelService } from './types';
 import { createNotificationRequest, fromNotificationResponseToCommunicationResource } from './sms';
+import { wrapHandler } from '../utils';
 
 export const getChannelAndService = (resource: CommunicationRequest) => {
   const channelConfig: ChannelConfig[] = config.get('channels') ||
@@ -48,7 +50,18 @@ export const processCommunicationRequest = (resource: CommunicationRequest)
 };
 
 export const processWebhook = (data: any): Promise<CommunicationResource> =>
-  Promise.reject(new Error('Not implemented'));
+  Promise.resolve(data);
 
 export const processStatusRequest = (communicationRequestId: string): Promise<CommunicationResource> =>
     Promise.reject(new Error('Not implemented'));
+
+const handleWebhook = async (req: Request, res: Response, next: Function) => {
+  const body = await processWebhook(req.body);
+  console.log(`Body: ${JSON.stringify(body)}`);
+  res.status(200).end();
+};
+
+const router = express.Router();
+router.post('/', wrapHandler(handleWebhook));
+
+export const apiRouter = router;
