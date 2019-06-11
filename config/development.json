@@ -9,7 +9,7 @@
         "token": "",
         "sid": "",
         "from": "",
-        "statusCallback": ""
+        "statusCallback": "http://localhost/webhook?channel=sms&service=twilio"
       }
     }]
   }]
