@@ -13,7 +13,7 @@ describe('Channels', () => {
 
     test('should return contact numbers given matching recipients with contact numbers', () => {
       const expectedSystem = 'phone';
-      const expectedValue = 'tel:+27731234567';
+      const expectedValue = '+27731234567';
       // @ts-ignore
       resource.contained[0].telecom.system = expectedSystem;
       // @ts-ignore

@@ -32,7 +32,7 @@ export const getRecipientContactNumbers = (resource: CommunicationRequest): stri
       containedResource.telecom.value
     )
     .map(containedResource => containedResource.telecom &&
-      containedResource.telecom.value ? `tel:${containedResource.telecom.value}` : '')
+      containedResource.telecom.value ? containedResource.telecom.value : '')
     : [];
 
 /**
