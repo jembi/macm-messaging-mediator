@@ -53,7 +53,12 @@ const channel: IChannel = {
       const props = notificationRequest.props as Props;
       const client = Twilio(props.sid, props.token);
 
-      client.messages.create({ from: props.from, to: notificationRequest.to, body: notificationRequest.body })
+      client.messages.create({
+        from: props.from,
+        to: notificationRequest.to,
+        body: notificationRequest.body,
+        statusCallback: props.statusCallback
+      })
       // @ts-ignore
       .then((message: MessageInstance) => resolve(toSmsResponse(message)))
       .catch(reject);
