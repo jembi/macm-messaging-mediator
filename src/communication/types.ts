@@ -20,5 +20,5 @@ export interface CommunicationResource {
   resourceType: ResourceType;
   status: Status;
   basedOn: Reference;
-  sent: Date;
+  sent?: Date;
 }

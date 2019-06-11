@@ -1,14 +1,27 @@
 'use strict';
 import { default as Twilio } from 'twilio';
 import { CommunicationResource } from '../../communication/types';
-import { INotificationRequest, INotificationResponse, IChannel } from '../types';
+import { INotificationRequest, INotificationResponse, IChannel, IWebhookResponse } from '../types';
 import { MessageInstance } from 'twilio/lib/rest/chat/v2/service/channel/message';
+
+const IDENTIFIER_SYSTEM = 'macm:sms:twilio';
 
 interface Props {
   sid: string;
   token: string;
   from: string;
   statusCallback: string;
+}
+
+interface WebhookData {
+  SmsSid: string;
+  SmsStatus: string;
+  MessageStatus: string;
+  To: string;
+  MessageSid: string;
+  AccountSid: string;
+  From: string;
+  ApiVersion: string;
 }
 
 const getMessageStatus = (status: string) => {
@@ -31,7 +44,7 @@ const toSmsResponse = (message: any) : INotificationResponse => ({
   id: message.sid,
   sent: message.dateCreated,
   status: getMessageStatus(message.status),
-  identifierSystem: 'macm:sms:twilio'
+  identifierSystem: IDENTIFIER_SYSTEM
 });
 
 const channel: IChannel = {
@@ -47,7 +60,17 @@ const channel: IChannel = {
     }),
 
   // TODO: Implment as part of the ISmsChannel interface
-  processWebhook: (data: any) : Promise<CommunicationResource> => Promise.reject(new Error('Not implemented')),
+  processWebhook: (data: any) : Promise<IWebhookResponse> =>
+    new Promise((resolve, reject) => {
+      const webHookData = data as WebhookData;
+
+      return webHookData ? resolve({
+        id: webHookData.MessageSid,
+        status: webHookData.MessageStatus,
+        identifierSystem: IDENTIFIER_SYSTEM
+      } as IWebhookResponse) : reject(new Error('Invalid twilio webhook data'));
+    }),
+
   // TODO: Implment as part of the ISmsChannel interface
   processStatusRequest: (communicationRequestId: string) : Promise<CommunicationResource> =>
     Promise.reject(new Error('Not implemented'))

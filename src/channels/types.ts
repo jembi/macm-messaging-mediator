@@ -17,7 +17,7 @@ export interface IChannel {
    * @param {any} data
    * @returns {Promise<CommunicationResource>}
    */
-  processWebhook(data: any) : Promise<CommunicationResource>;
+  processWebhook(data: any) : Promise<IWebhookResponse>;
 
   /**
    * Processes a request for the delivery status of an alert/notification.
@@ -46,6 +46,16 @@ export interface INotificationResponse {
   id: string;
   status: 'in-progress' | 'completed' | 'entered-in-error';
   sent: Date;
+  identifierSystem: string;
+}
+
+/**
+ * Represents a response from a channel.
+ * NOTE: the status property should be that which acceptable in FHIR STU 3 Communication resource.
+ */
+export interface IWebhookResponse {
+  id: string;
+  status: 'in-progress' | 'completed' | 'entered-in-error';
   identifierSystem: string;
 }
 
