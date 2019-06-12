@@ -3,16 +3,16 @@ import express, { Request, Response } from 'express';
 import { default as config } from '../../src/config';
 import { CommunicationRequest } from '../communication_request/types';
 import { CommunicationResource } from '../communication/types';
-import { INotificationResponse, IChannel, ChannelConfig, ChannelService } from './types';
+import { INotificationResponse, IChannel, ChannelConfig, ChannelService, ChannelMetadataConfig } from './types';
 import { createNotificationRequest, fromNotificationResponseToCommunicationResource } from './sms';
 import { logger } from '../utils';
 import { default as fhirService } from '../services/fhirstore.service';
 
 export const getChannelAndService = (channel: string | undefined, service: string | undefined) => {
-  const channelConfig: ChannelConfig[] = config.get('channels') ||
+  const channelConfig: ChannelMetadataConfig[] = (config.get('channels') as ChannelConfig).metadata ||
     (() => { throw new Error('Missing configuration for "channels"'); });
 
-  const matchedChannel: ChannelConfig =
+  const matchedChannel: ChannelMetadataConfig =
     channelConfig.find(cfg => cfg.type.toLowerCase() === channel) ||
     channelConfig.find(cfg => cfg.default || false) ||
     (() => { throw new Error('No default channel for CommunicationRequest'); })();

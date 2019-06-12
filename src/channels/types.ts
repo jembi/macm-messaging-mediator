@@ -1,6 +1,7 @@
 'use strict';
 
 import { CommunicationResource } from '../communication/types';
+import { PortNumber } from '../utils/types';
 
 export interface IChannel {
   /**
@@ -60,6 +61,17 @@ export interface IWebhookResponse {
 }
 
 export interface ChannelConfig {
+  webhook: WebhookConfig | undefined;
+  metadata: ChannelMetadataConfig[];
+}
+
+export interface WebhookConfig {
+  host: string;
+  port: PortNumber | undefined;
+  protocol: 'https' | 'http';
+}
+
+export interface ChannelMetadataConfig {
   type: string;
   default?: boolean;
   services: ChannelService[];
