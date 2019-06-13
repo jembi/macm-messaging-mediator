@@ -1,23 +1,30 @@
 {
   "channels": {
     "webhook": {
-      "host": "",
-      "protocol": "",
-      "port": ""
+      "host": "localhost",
+      "protocol": "http",
+      "port": 3000
     },
     "metadata": [
       {
-        "type": "",
+        "type": "sms",
         "default": true,
         "services": [
           {
             "default": true,
-            "name": "",
+            "name": "twilio",
             "props": {
               "token": "",
               "sid": "",
-              "from": "",
-              "statusCallback": ""
+              "from": ""
+            }
+          },
+          {
+            "name": "rapidpro",
+            "props": {
+              "flowApiUrl": "",
+              "token": "",
+              "flow": ""
             }
           }
         ]

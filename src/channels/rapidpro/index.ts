@@ -4,6 +4,12 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { EnvKeys } from '../../constants';
 import { RapidProFlowBody, SendResponse } from './types';
 
+interface Props {
+  flowApiUrl: string;
+  token: string;
+  flow: string;
+}
+
 /**
  * Trigger a RapidPro flow for sending a message to recepients.
  *
