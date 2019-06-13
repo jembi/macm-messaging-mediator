@@ -1,37 +1,13 @@
 'use strict';
 import { default as createError } from 'http-errors';
 import * as Joi from 'joi';
-import config from '../config';
 import { Request, Response } from 'express';
 import { communicationRequestSchema } from './schema';
 import { fhirStore } from '../services';
 import { processCommunicationRequest } from '../channels';
 import { createOperationOutcome, getSeverityAndCode, deepClone } from '../utils';
 import { OperationOutcomeIssue, SeverityAndCode, OperationOutcome } from '../utils/types';
-import { AddCommunicationRequestResponse, CommunicationRequest } from './types';
-import { RapidProFlowBody } from '../channels/sms/rapidpro/types';
-import { EnvKeys } from '../constants';
-
-/**
- * Map AddCommunicationRequestResponse to a RapidProFlowBody instance.
- *
- * @param {AddCommunicationRequestResponse} addCommunicationRequestResponse - The data to map from
- * @returns {RapidProFlowBody}
- */
-export const rapidProDataAdapter =
-  (addCommunicationRequestResponse: AddCommunicationRequestResponse) : RapidProFlowBody => {
-    if (!addCommunicationRequestResponse || Object.keys(addCommunicationRequestResponse).length === 0) {
-      throw new Error('"addCommunicationRequestResponse" is required.');
-    }
-
-    return {
-      flow: config.get(EnvKeys.RapidProSmsFlowId),
-      urns: addCommunicationRequestResponse.contactNumbers,
-      extra: {
-        message: addCommunicationRequestResponse.text
-      }
-    };
-  };
+import { CommunicationRequest } from './types';
 
 export const addCommunicationRequest = async (req: Request, res: Response, next: Function) => {
   const validationResult = Joi.validate(req.body || {}, communicationRequestSchema);
