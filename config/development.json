@@ -7,17 +7,17 @@
     },
     "metadata": [
       {
-        "type": "sms",
+        "type": "",
         "default": true,
         "services": [
           {
             "default": true,
-            "name": "twilio",
+            "name": "",
             "props": {
-              "token": "227cdb05e352075ee3afe7bf562c0c48",
-              "sid": "AC1fd9f1c4e2b1286328c246191b496490",
-              "from": "+18583751570",
-              "statusCallback": "http://89228dd1.ngrok.io?channel=sms&service=twilio"
+              "token": "",
+              "sid": "",
+              "from": "",
+              "statusCallback": ""
             }
           }
         ]
