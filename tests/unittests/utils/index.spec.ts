@@ -110,9 +110,9 @@ describe('Utils', () => {
   describe('createCallbackUrl()', () => {
     test.each`
       port          | protocol    | expectedResult
-      ${3000}       | ${'http'}   | ${'http://localhost:3000/sms/twilio'}
-      ${undefined}  | ${'https'}  | ${'https://localhost/sms/twilio'}
-      ${''}         | ${'http'}   | ${'http://localhost/sms/twilio'}
+      ${3000}       | ${'http'}   | ${'http://localhost:3000/webhook/sms/twilio'}
+      ${undefined}  | ${'https'}  | ${'https://localhost/webhook/sms/twilio'}
+      ${''}         | ${'http'}   | ${'http://localhost/webhook/sms/twilio'}
     `('should return webhook url given valid config', ({ port, protocol, expectedResult }) => {
       config.get = jest.fn().mockImplementationOnce(() => ({
         webhook: {

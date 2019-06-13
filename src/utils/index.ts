@@ -125,6 +125,6 @@ export const createCallbackUrl = (channel: string, service: string) => {
             'Webhook protocol is required and must be "http" or "https"');
 
   return webhookConfig.port
-    ? `${webhookConfig.protocol}://${webhookConfig.host}:${webhookConfig.port}/${channel}/${service}`
-    : `${webhookConfig.protocol}://${webhookConfig.host}/${channel}/${service}`;
+    ? `${webhookConfig.protocol}://${webhookConfig.host}:${webhookConfig.port}/webhook/${channel}/${service}`
+    : `${webhookConfig.protocol}://${webhookConfig.host}/webhook/${channel}/${service}`;
 };
