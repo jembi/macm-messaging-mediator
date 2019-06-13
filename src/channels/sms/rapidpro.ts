@@ -1,7 +1,7 @@
 'use strict';
 import axios, { AxiosRequestConfig } from 'axios';
-import { IChannel, INotificationRequest, INotificationResponse, IWebhookResponse } from '../../types';
-import { CommunicationResource } from '../../../communication/types';
+import { IChannel, INotificationRequest, INotificationResponse, IWebhookResponse } from '../types';
+import { CommunicationResource } from '../../communication/types';
 
 interface Props {
   flowApiUrl: string;
