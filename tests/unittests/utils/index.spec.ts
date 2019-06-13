@@ -1,5 +1,8 @@
-import { createOperationOutcome, getSeverityAndCode, buildHearthUrl } from '../../../src/utils';
+import { createOperationOutcome, getSeverityAndCode, buildHearthUrl, createCallbackUrl } from '../../../src/utils';
 import { OperationOutcomeIssue, UrlArgs } from '../../../src/utils/types';
+import config from '../../../src/config';
+
+jest.mock('../../../src/config');
 
 describe('Utils', () => {
   describe('createOperationOutcome()', () => {
@@ -101,6 +104,86 @@ describe('Utils', () => {
       };
 
       expect(() => buildHearthUrl(urlArgs)).toThrowError('Invalid host');
+    });
+  });
+
+  describe('createCallbackUrl()', () => {
+    test.each`
+      port          | protocol    | expectedResult
+      ${3000}       | ${'http'}   | ${'http://localhost:3000/sms/twilio'}
+      ${undefined}  | ${'https'}  | ${'https://localhost/sms/twilio'}
+      ${''}         | ${'http'}   | ${'http://localhost/sms/twilio'}
+    `('should return webhook url given valid config', ({ port, protocol, expectedResult }) => {
+      config.get = jest.fn().mockImplementationOnce(() => ({
+        webhook: {
+          port,
+          protocol,
+          host: 'localhost'
+        }
+      }));
+
+      const result = expect(createCallbackUrl('sms', 'twilio')).toEqual(expectedResult);
+    });
+
+    test.each`
+      channel
+      ${undefined}
+      ${null}
+      ${''}
+    `('should throw error when no channel is defined', ({ channel }) => {
+      expect(() => createCallbackUrl(channel, 'twilio'))
+        .toThrowError('Channel is required for creating a callback url');
+    });
+
+    test.each`
+      service
+      ${undefined}
+      ${null}
+      ${''}
+    `('should throw error when no service is defined', ({ service }) => {
+      expect(() => createCallbackUrl('sms', service))
+      .toThrowError('Service is required for creating a callback url');
+    });
+
+    test('should throw error when no webhook config defined', () => {
+
+      config.get = jest.fn().mockImplementationOnce(() => ({ webhook: undefined }));
+
+      expect(() => createCallbackUrl('sms', 'twilio'))
+        .toThrowError('Webhook configuration missing');
+    });
+
+    test('should throw error when no webhook host defined', () => {
+
+      config.get = jest.fn().mockImplementationOnce(() => ({
+        webhook: {
+          port: 3000,
+          protocol: 'http'
+        }
+      }));
+
+      expect(() => createCallbackUrl('sms', 'twilio'))
+        .toThrowError('Webhook host is required');
+    });
+
+    test.each`
+      protocol
+      ${undefined}
+      ${''}
+      ${{}}
+      ${[]}
+      ${'invalid string'}
+    `('should throw error when protocol is "$protocol"', ({ protocol }) => {
+      config.get = jest.fn().mockImplementationOnce(() => ({
+        webhook: {
+          protocol,
+          host: 'localhost',
+          port: 3000
+        }
+      }));
+
+      expect(() => createCallbackUrl('sms', 'twilio'))
+        .toThrowError('Webhook protocol is required and must be "http" or "https"');
     });
   });
 });
