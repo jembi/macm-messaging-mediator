@@ -12,10 +12,11 @@ interface Props {
 const processNotification = (notificationRequest: INotificationRequest) : Promise<INotificationResponse> =>
   new Promise((resolve, reject) => {
     const props = notificationRequest.props as Props;
+
     const axiosConfig : AxiosRequestConfig = {
       data: {
+        urns: notificationRequest.to.map(urn => `tel:${urn}`),
         flow: props.flow,
-        urns: notificationRequest.to,
         extra: { message: notificationRequest.body }
       },
       url: props.flowApiUrl,
