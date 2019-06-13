@@ -24,8 +24,5 @@ export enum EnvKeys {
   HearthPort = 'HEARTH_PORT',
   HearthSecured = 'HEARTH_SCURED',
   NodeEnv = 'NODE_ENV',
-  Port = 'PORT',
-  RapidProSmsFlowId = 'RAPIDPRO_SMS_FLOW_ID',
-  RapidProApiKey = 'RAPIDPRO_API_KEY',
-  RapidProApiUrl = 'RAPIDPRO_API_URL'
+  Port = 'PORT'
 }

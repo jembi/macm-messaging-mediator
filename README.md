@@ -28,10 +28,7 @@ npm start
  HEARTH_HOST | Hearth host name
  HEARTH_PORT | The port Hearth is running on
  HEARTH_SECURED | `true` for `https` and `false` for `http`
- PORT | Port number for the mACM messaging mediator 
- RAPIDPRO_SMS_FLOW_ID | RapidPro sms flow identifier
- RAPIDPRO_API_KEY | RapidPro API Key
- RAPIDPRO_API_URL | RapidPro API Url
+ PORT | Port number for the mACM messaging mediator
 
 ## Running Tests
 
