@@ -54,7 +54,6 @@ export const processWebhook = ({ data, channelName, serviceName }): Promise<any>
   new Promise(async (resolve, reject) => {
     try {
       const { channelType, service } = getChannelAndService(channelName, serviceName);
-
       const channel = require(`./${channelType.type}/${service.name}`).default as IChannel;
 
       const response = await channel.processWebhook(data);
@@ -79,16 +78,14 @@ export const processWebhook = ({ data, channelName, serviceName }): Promise<any>
 export const processStatusRequest = (communicationRequestId: string): Promise<CommunicationResource> =>
     Promise.reject(new Error('Not implemented'));
 
-const handleWebhook = async (req: Request, res: Response, next: Function) => {
+const handleWebhook = async (req: Request, res: Response) => {
   try {
     logger.info('Webhook call received.');
-    // @ts-ignore
-    logger.info(`Request Channel: ${JSON.stringify(req.query)}`);
 
     const body = await processWebhook({
       data: req.body,
-      channelName: req.query.channel,
-      serviceName: req.query.service
+      channelName: req.params.channel,
+      serviceName: req.params.service
     });
     logger.info('Webhook call successful.');
 
@@ -100,6 +97,6 @@ const handleWebhook = async (req: Request, res: Response, next: Function) => {
 };
 
 const router = express.Router();
-router.post('/', handleWebhook);
+router.post('/:channel/:service', handleWebhook);
 
 export const apiRouter = router;

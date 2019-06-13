@@ -3,6 +3,7 @@ import { default as Twilio } from 'twilio';
 import { CommunicationResource } from '../../communication/types';
 import { INotificationRequest, INotificationResponse, IChannel, IWebhookResponse } from '../types';
 import { MessageInstance } from 'twilio/lib/rest/chat/v2/service/channel/message';
+import { createCallbackUrl } from '../../utils';
 
 const IDENTIFIER_SYSTEM = 'macm:sms:twilio';
 
@@ -10,7 +11,6 @@ interface Props {
   sid: string;
   token: string;
   from: string;
-  statusCallback: string;
 }
 
 interface WebhookData {
@@ -51,13 +51,14 @@ const channel: IChannel = {
   processNotification: (notificationRequest: INotificationRequest) : Promise<INotificationResponse> =>
     new Promise((resolve, reject) => {
       const props = notificationRequest.props as Props;
+      const statusCallback = createCallbackUrl('sms', 'twilio');
       const client = Twilio(props.sid, props.token);
 
       client.messages.create({
+        statusCallback,
         from: props.from,
         to: notificationRequest.to,
-        body: notificationRequest.body,
-        statusCallback: props.statusCallback
+        body: notificationRequest.body
       })
       // @ts-ignore
       .then((message: MessageInstance) => resolve(toSmsResponse(message)))
