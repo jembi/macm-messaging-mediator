@@ -3,6 +3,8 @@ import config from '../../../config';
 import axios, { AxiosRequestConfig } from 'axios';
 import { EnvKeys } from '../../../constants';
 import { RapidProFlowBody, SendResponse } from './types';
+import { IChannel, INotificationRequest, INotificationResponse, IWebhookResponse } from '../../types';
+import { CommunicationResource } from '../../../communication/types';
 
 interface Props {
   flowApiUrl: string;
@@ -35,3 +37,15 @@ export const send = (data: RapidProFlowBody) : Promise<SendResponse> =>
       modified_on: response.data.modified_on
     } as SendResponse)).catch(reject);
   });
+
+const channel : IChannel = {
+  processNotification: (notificationRequest: INotificationRequest) : Promise<INotificationResponse> =>
+    // @ts-ignore
+    Promise.resolve({}),
+  processWebhook: (data: any) : Promise<IWebhookResponse> => Promise.reject(new Error('Not implemented')),
+
+  processStatusRequest: (communicationRequestId: string) : Promise<CommunicationResource> =>
+    Promise.reject(new Error('Not implemented'))
+};
+
+export default channel;
