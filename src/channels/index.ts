@@ -34,6 +34,10 @@ export const processCommunicationRequest = (resource: CommunicationRequest)
     ? resource.extension.find(ext => ext.url === 'CommunicationRequest.channel')
     : undefined;
 
+  const extensions = resource.extension
+    ? resource.extension.filter(ext => ext.url !== 'CommunicationRequest.channel')
+    : [];
+
   const [resourceChannel, resourceService] = channelExtension
     ? channelExtension.valueString.split(':')
     : [undefined, undefined];
@@ -44,7 +48,7 @@ export const processCommunicationRequest = (resource: CommunicationRequest)
     case 'sms':
       const smsChannel = channel.default as IChannel;
       return new Promise((resolve, reject) =>
-        smsChannel.processNotification(createNotificationRequest(resource, service.props))
+        smsChannel.processNotification(createNotificationRequest(resource, service.props, extensions))
         .then((response: INotificationResponse) =>
           resolve(fromNotificationResponseToCommunicationResource(response, `CommunicationRequest/${resource.id}`)))
         .catch(reject));
