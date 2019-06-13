@@ -30,8 +30,12 @@ export const getChannelAndService = (channel: string | undefined, service: strin
 
 export const processCommunicationRequest = (resource: CommunicationRequest)
   : Promise<CommunicationResource> => {
-  const [resourceChannel, resourceService] = resource.extension
-    ? resource.extension[0].valueString.split(':')
+  const channelExtension = resource.extension
+    ? resource.extension.find(ext => ext.url === 'CommunicationRequest.channel')
+    : undefined;
+
+  const [resourceChannel, resourceService] = channelExtension
+    ? channelExtension.valueString.split(':')
     : [undefined, undefined];
   const { channelType, service } = getChannelAndService(resourceChannel, resourceService);
 
