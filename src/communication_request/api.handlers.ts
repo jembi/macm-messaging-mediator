@@ -9,7 +9,7 @@ import { processCommunicationRequest } from '../channels';
 import { createOperationOutcome, getSeverityAndCode, deepClone } from '../utils';
 import { OperationOutcomeIssue, SeverityAndCode, OperationOutcome } from '../utils/types';
 import { AddCommunicationRequestResponse, CommunicationRequest } from './types';
-import { RapidProFlowBody } from '../channels/rapidpro/types';
+import { RapidProFlowBody } from '../channels/sms/rapidpro/types';
 import { EnvKeys } from '../constants';
 
 /**
