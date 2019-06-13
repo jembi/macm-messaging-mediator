@@ -34,7 +34,7 @@ export interface IChannel {
  * Represents parameters for a notification to be sent by channel.
  */
 export interface INotificationRequest {
-  to: string;
+  to: string[];
   body: string;
   props: Object;
 }
