@@ -50,5 +50,5 @@ export const createNotificationRequest =
       extensions,
       body: getTextMessage(communicationRequest),
       // TODO: Change sms channel to handle mupltiple contact numbers.
-      to: getRecipientContactNumbers(communicationRequest)[0]
+      to: getRecipientContactNumbers(communicationRequest)
     });

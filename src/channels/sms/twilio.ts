@@ -57,7 +57,7 @@ const channel: IChannel = {
       client.messages.create({
         statusCallback,
         from: props.from,
-        to: notificationRequest.to,
+        to: notificationRequest.to[0],
         body: notificationRequest.body
       })
       // @ts-ignore
