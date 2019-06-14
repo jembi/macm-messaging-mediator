@@ -65,8 +65,11 @@ export const processWebhook = ({ data, channelName, serviceName }): Promise<any>
       const channel = require(`./${channelType.type}/${service.name}`).default as IChannel;
 
       const response = await channel.processWebhook(data);
-      const existingCommunicationResource =
-        await fhirService.getCommunicationResources(response.id, 1) as CommunicationResource;
+
+      const communicationResources = (await fhirService.getCommunicationResources(response.id))
+        .map((comm: any) => comm.resource)
+        .filter((comm: CommunicationResource) => comm.basedOn && typeof comm.basedOn !== undefined) ||
+        (() => { throw new Error('CommunicationRequest reference is required for Communication resource'); });
 
       await fhirService.addCommunicationResource({
         identifier: [{
@@ -75,10 +78,13 @@ export const processWebhook = ({ data, channelName, serviceName }): Promise<any>
         }],
         resourceType: 'Communication',
         status: response.status,
-        basedOn: existingCommunicationResource.basedOn
+        basedOn: {
+          reference: communicationResources[0].basedOn.reference
+        }
       } as CommunicationResource);
       return resolve('Successful!');
     } catch (err) {
+      logger.error(err);
       return reject(err);
     }
   });
