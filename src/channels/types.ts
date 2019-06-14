@@ -37,6 +37,7 @@ export interface INotificationRequest {
   to: string[];
   body: string;
   props: Object;
+  extensions: Object[];
 }
 
 /**
