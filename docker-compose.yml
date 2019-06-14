@@ -19,6 +19,7 @@ services:
     environment:
       - server__fhirVersion=stu3
       - server__port=3447
+      - authentication__type=disabled
       - mongodb__url=mongodb://mongo:27017/hearth
       - NODE_ENV=development
     ports:

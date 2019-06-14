@@ -1,6 +1,6 @@
 'use strict';
 import axios from 'axios';
-import { default as config } from 'nconf';
+import config from '../config';
 import { buildHearthUrl, getResourceIdFromLocationHeader } from '../utils';
 import { PortNumber } from '../utils/types';
 import { fhirResources, EnvKeys } from '../constants';
@@ -91,7 +91,22 @@ const addCommunicationResource =
       .catch(err => reject(err.message));
   });
 
+const getCommunicationResources = (messageId: string, count: number = -1) =>
+  new Promise((resolve, reject) => {
+    const path = count < 0
+      ? `fhir/${fhirResources.COMMUNICATION}?identifier=${messageId}`
+      : `fhir/${fhirResources.COMMUNICATION}?identifier=${messageId}&_count=${count}`;
+
+    axios.get(buildHearthUrl({
+      host: config.get(EnvKeys.HearthHost) as string,
+      port: config.get(EnvKeys.HearthPort) as PortNumber,
+      secured: config.get(EnvKeys.HearthSecured) as boolean,
+      path: `fhir/${fhirResources.COMMUNICATION}?identifier=${messageId}&_count=${count}`
+    })).then(resolve).catch(reject);
+  });
+
 export default {
   addCommunicationRequest,
-  addCommunicationResource
+  addCommunicationResource,
+  getCommunicationResources
 };

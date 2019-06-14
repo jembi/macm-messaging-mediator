@@ -1,6 +1,6 @@
 'use strict';
+import config from '../../config';
 import axios, { AxiosRequestConfig } from 'axios';
-import { default as config } from 'nconf';
 import { EnvKeys } from '../../constants';
 import { RapidProFlowBody, SendResponse } from './types';
 

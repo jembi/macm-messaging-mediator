@@ -1,17 +1,16 @@
 'use strict';
 import { default as createError } from 'http-errors';
 import * as Joi from 'joi';
-import { default as config } from 'nconf';
+import config from '../config';
 import { Request, Response } from 'express';
 import { communicationRequestSchema } from './schema';
 import { fhirStore } from '../services';
-import { send } from '../channels/rapidpro';
-import { createOperationOutcome, getSeverityAndCode } from '../utils';
+import { processCommunicationRequest } from '../channels';
+import { createOperationOutcome, getSeverityAndCode, deepClone } from '../utils';
 import { OperationOutcomeIssue, SeverityAndCode, OperationOutcome } from '../utils/types';
 import { AddCommunicationRequestResponse, CommunicationRequest } from './types';
 import { RapidProFlowBody } from '../channels/rapidpro/types';
 import { EnvKeys } from '../constants';
-import communication from '../communication';
 
 /**
  * Map AddCommunicationRequestResponse to a RapidProFlowBody instance.
@@ -41,11 +40,13 @@ export const addCommunicationRequest = async (req: Request, res: Response, next:
     return next(createError(400, validationResult.error.details[0].message));
   }
 
-  const addCommunicationRequestResponse =
-    await fhirStore.addCommunicationRequest(req.body as CommunicationRequest);
-  const sendResponse = await send(await rapidProDataAdapter(addCommunicationRequestResponse));
-  await fhirStore.addCommunicationResource(communication.createCommunicationResource(
-    sendResponse, addCommunicationRequestResponse.communicationRequestReference));
+  const addCommunicationRequestResponse = await fhirStore.addCommunicationRequest(req.body as CommunicationRequest);
+
+  const updatedCommunicationRequest = deepClone(req.body) as CommunicationRequest;
+  updatedCommunicationRequest.id = addCommunicationRequestResponse.communicationRequestReference.split('/')[1];
+
+  const communication = await processCommunicationRequest(updatedCommunicationRequest);
+  await fhirStore.addCommunicationResource(communication);
 
   const severityAndCode : SeverityAndCode = getSeverityAndCode(202);
   const issue : OperationOutcomeIssue = {

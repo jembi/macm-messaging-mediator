@@ -8,7 +8,7 @@
     "build": "node_modules/.bin/tsc",
     "lint": "node_modules/.bin/tslint src/**/**/*.ts",
     "lint:fix": "node_modules/.bin/tslint src/**/**/*.ts --fix",
-    "test": "jest --coverage",
+    "test": "npm run lint && jest --coverage",
     "test:watch": "jest --watchAll",
     "start": "nodemon --exec ts-node src",
     "start:production": "NODE_ENV=production node lib/"
@@ -45,6 +45,7 @@
     "@types/joi": "^14.3.3",
     "@types/node": "^11.13.7",
     "@types/supertest": "^2.0.7",
+    "@types/twilio": "0.0.10",
     "jest": "^24.7.1",
     "supertest": "^4.0.2",
     "ts-jest": "^24.0.2",
@@ -63,6 +64,7 @@
     "joi": "^14.3.1",
     "nconf": "^0.10.0",
     "nodemon": "^1.18.11",
+    "twilio": "^3.31.1",
     "winston": "^3.2.1"
   }
 }

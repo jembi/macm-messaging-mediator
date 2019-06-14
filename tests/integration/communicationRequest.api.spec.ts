@@ -1,14 +1,14 @@
-import { default as config } from 'nconf';
+import config from '../../src/config';
 import { default as request } from 'supertest';
 import { validCommunicationRequest } from '../testUtils/data';
 import app from '../../src/app';
 import * as services from '../../src/services';
-import * as rapidProService from '../../src/channels/rapidpro';
+import { default as channel } from '../../src/channels/sms/twilio';
 import { createOperationOutcome } from '../testUtils';
 
-jest.mock('nconf');
+jest.mock('../../src/config');
 jest.mock('../../src/services');
-jest.mock('../../src/channels/rapidpro');
+jest.mock('../../src/channels');
 
 describe('CommunicationRequest API', () => {
   describe('Integration tests', () => {
@@ -16,7 +16,7 @@ describe('CommunicationRequest API', () => {
 
     const setupSuccessfulRequest = () => {
       // @ts-ignore
-      config.get = jest.fn().mockImplementation(() => 'test')
+      config.get = jest.fn().mockImplementation(() => 'test');
       // @ts-ignore
       services.fhirStore.addCommunicationRequest = jest.fn().mockImplementation(() =>
         Promise.resolve({
@@ -29,12 +29,12 @@ describe('CommunicationRequest API', () => {
       services.fhirStore.addCommunicationResource = jest.fn().mockImplementation(() => Promise.resolve({}));
 
       // @ts-ignore
-      rapidProService.send = jest.fn().mockImplementation(() => Promise.resolve({}));
+      channel.processNotification = jest.fn().mockImplementation(() => Promise.resolve({}));
     };
 
     const setupInternalServerRequest = () => {
       // @ts-ignore
-      config.get = jest.fn().mockImplementation(() => 'test')
+      config.get = jest.fn().mockImplementation(() => 'test');
       // @ts-ignore
       services.fhirStore.addCommunicationRequest = jest.fn().mockImplementation(() =>
         Promise.reject(new Error('Connection refused')));
@@ -43,7 +43,7 @@ describe('CommunicationRequest API', () => {
       services.fhirStore.addCommunicationResource = jest.fn().mockImplementation(() => Promise.resolve({}));
 
       // @ts-ignore
-      rapidProService.send = jest.fn().mockImplementation(() => Promise.resolve({}));
+      channel.send = jest.fn().mockImplementation(() => Promise.resolve({}));
     };
 
     describe('POST', () => {
@@ -55,7 +55,7 @@ describe('CommunicationRequest API', () => {
           'information',
           'Accepted'
         );
-        
+
         const response = await agent.post('/CommunicationRequest').send(body);
 
         expect(response).toBeDefined();
@@ -80,7 +80,7 @@ describe('CommunicationRequest API', () => {
         expect(result.status).toBe(400);
         expect(result.body).toEqual(expectedResponse);
       });
-      
+
       test('should return status 500 given an internal server error', async () => {
         const body = Object.assign({}, validCommunicationRequest);
         setupInternalServerRequest();
@@ -99,4 +99,3 @@ describe('CommunicationRequest API', () => {
     });
   });
 });
-

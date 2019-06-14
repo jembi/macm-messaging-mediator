@@ -1,8 +1,8 @@
-import { default as config } from 'nconf';
+import config from '../../../src/config';
 import { rapidProDataAdapter } from '../../../src/communication_request/api.handlers';
 import { AddCommunicationRequestResponse } from '../../../src/communication_request/types';
 
-jest.mock('nconf');
+jest.mock('../../../src/config');
 
 describe('CommunicationRequest API handler', () => {
   describe('rapidProDataAdapter()', () => {

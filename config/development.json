@@ -1,0 +1,27 @@
+{
+  "channels": {
+    "webhook": {
+      "host": "",
+      "protocol": "",
+      "port": ""
+    },
+    "metadata": [
+      {
+        "type": "",
+        "default": true,
+        "services": [
+          {
+            "default": true,
+            "name": "",
+            "props": {
+              "token": "",
+              "sid": "",
+              "from": "",
+              "statusCallback": ""
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

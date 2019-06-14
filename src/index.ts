@@ -1,6 +1,5 @@
 #!/usr/bin/env node
-import { default as config } from 'nconf';
-config.argv().env();
+import config from './config';
 import app from './app';
 import http from 'http';
 import { logger } from './utils';

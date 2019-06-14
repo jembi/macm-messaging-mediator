@@ -46,6 +46,11 @@ const referenceSchema = {
 const statusErrorMessage =
   new Error(`Resource status is required and must be '${statuses.ACTIVE}'`);
 
+const extensionSchama = {
+  url: Joi.string().valid('CommunicationRequest.channel').required(),
+  valueString: Joi.string().required()
+};
+
 export const communicationRequestSchema = Joi.object({
   resourceType: Joi.string().valid(fhirResources.COMMUNICATION_REQUEST).required(),
   status: Joi.string().valid(statuses.ACTIVE).required().error(statusErrorMessage),
@@ -55,5 +60,6 @@ export const communicationRequestSchema = Joi.object({
   category: Joi.array().items(categorySchema).length(1),
   authoredOn: Joi.date().required(),
   requester: Joi.object().keys(referenceSchema),
-  recipient: Joi.array().items(referenceSchema).length(1)
+  recipient: Joi.array().items(referenceSchema).length(1),
+  extension: Joi.array().items(extensionSchama).length(1).optional()
 });

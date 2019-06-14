@@ -1,5 +1,5 @@
 'use strict';
-import { OperationOutcomeIssueCode, OperationOutcomeIssueSeverity } from "../../src/utils/types";
+import { OperationOutcomeIssueCode, OperationOutcomeIssueSeverity } from '../../src/utils/types';
 
 export const createOperationOutcome = (
   code: OperationOutcomeIssueCode,
@@ -7,10 +7,10 @@ export const createOperationOutcome = (
   text: string) => ({
     resourceType: 'OperationOutcome',
     issues: [{
-      code: code,
+      severity,
+      code,
       details: {
-        text: text
-      },
-      severity: severity
+        text
+      }
     }]
   });
