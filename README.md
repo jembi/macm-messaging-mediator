@@ -1,4 +1,4 @@
-# mACM Messaging Mediator [![Build Status](https://travis-ci.com/jembi/macm-messaging-mediator.svg?token=HL2Z5FKkgvPyxYf3MGbf&branch=master)](https://travis-ci.com/jembi/macm-messaging-mediator)
+# mACM Messaging Mediator [![Build Status](https://travis-ci.com/jembi/macm-messaging-mediator.svg?token=HL2Z5FKkgvPyxYf3MGbf&branch=master)](https://travis-ci.com/jembi/macm-messaging-mediator) [![codecov](https://codecov.io/gh/jembi/macm-messaging-mediator/branch/master/graph/badge.svg?token=dejEYdMvrg)](https://codecov.io/gh/jembi/macm-messaging-mediator)
 
 A messaging mediator that implements the IHE mACM profile.
 
