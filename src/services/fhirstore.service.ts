@@ -104,11 +104,11 @@ const getCommunicationResources = (messageId: string) : Promise<any[]> =>
     })).then((response: any) => resolve(response.data.entry)).catch(reject)
   );
 
-const searchForResources = (fhirStoreUrl: string, searchParams: Object) : Promise<any[]> =>
+const searchForResources = (fhirStoreUrl: string, searchParams: Object) : Promise<any[] | any> =>
     new Promise((resolve, reject) =>
       axios
         .get(appendExpressSearchParams(fhirStoreUrl, searchParams))
-        .then((response: any) => resolve(response.data.entry))
+        .then((response: any) => resolve(response.data))
         .catch(reject)
     );
 
