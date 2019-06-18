@@ -1,9 +1,10 @@
 'use strict';
 
 import { CommunicationResource } from '../communication/types';
+import { CommunicationRequest } from '../communication_request/types';
 import { PortNumber } from '../utils/types';
 
-export interface IChannel {
+export interface IService {
   /**
    * Processes a INotificationRequest and sends an alert/notification.
    *
@@ -28,6 +29,16 @@ export interface IChannel {
    * @returns {Promise<CommunicationResource>}
    */
   processStatusRequest(communicationRequestId: string) : Promise<CommunicationResource>;
+}
+
+export interface IChannel {
+  /**
+   * Transform a CommunicationRequest into an object that conforms to INotificationRequest interface
+   *
+   * @param {CommunicationRequest} communicationRequest
+   * @return {INotificationRequest}
+   */
+  createNotificationRequest (communicationRequest: CommunicationRequest, props: Object, extensions: Object[]): INotificationRequest;
 }
 
 /**

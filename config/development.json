@@ -16,10 +16,16 @@
             "props": {
               "token": "",
               "sid": "",
-              "from": "",
-              "webhookActive": false
+              "from": "+",
+              "webhookActive": false              
             }
-          },
+          }
+        ]
+      },
+      {
+        "type": "other",
+        "default": true,
+        "services": [
           {
             "name": "rapidpro",
             "props": {

@@ -1,7 +1,7 @@
 'use strict';
 import { default as Twilio } from 'twilio';
 import { CommunicationResource } from '../../communication/types';
-import { INotificationRequest, INotificationResponse, IChannel, IWebhookResponse } from '../types';
+import { INotificationRequest, INotificationResponse, IService, IWebhookResponse } from '../types';
 import { MessageInstance } from 'twilio/lib/rest/chat/v2/service/channel/message';
 import { createCallbackUrl } from '../../utils';
 
@@ -48,7 +48,7 @@ const toSmsResponse = (message: any) : INotificationResponse => ({
   identifierSystem: IDENTIFIER_SYSTEM
 });
 
-const channel: IChannel = {
+const service: IService = {
   processNotification: (notificationRequest: INotificationRequest) : Promise<INotificationResponse> =>
     new Promise((resolve, reject) => {
       const props = notificationRequest.props as Props;
@@ -88,4 +88,4 @@ const channel: IChannel = {
     Promise.reject(new Error('Not implemented'))
 };
 
-export default channel;
+export default service;

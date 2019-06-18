@@ -3,8 +3,7 @@ import express, { Request, Response } from 'express';
 import { default as config } from '../../src/config';
 import { CommunicationRequest } from '../communication_request/types';
 import { CommunicationResource } from '../communication/types';
-import { INotificationResponse, IChannel, ChannelConfig, ChannelService, ChannelMetadataConfig } from './types';
-import { createNotificationRequest, fromNotificationResponseToCommunicationResource } from './sms';
+import { INotificationResponse, IService, IChannel, ChannelConfig, ChannelService, ChannelMetadataConfig } from './types';
 import { logger } from '../utils';
 import { default as fhirService } from '../services/fhirstore.service';
 
@@ -24,9 +23,23 @@ export const getChannelAndService = (channel: string | undefined, service: strin
 
   return {
     channelType: matchedChannel,
-    service: matchedService
+    serviceType: matchedService
   };
 };
+
+export const fromNotificationResponseToCommunicationResource =
+(data: INotificationResponse, communicationRequestReference: string): CommunicationResource => ({
+  identifier: [{
+    system: data.identifierSystem,
+    value: data.id
+  }],
+  resourceType: 'Communication',
+  status: data.status,
+  basedOn: {
+    reference: communicationRequestReference
+  },
+  sent: data.sent
+});
 
 export const processCommunicationRequest = (resource: CommunicationRequest)
   : Promise<CommunicationResource> => {
@@ -41,30 +54,28 @@ export const processCommunicationRequest = (resource: CommunicationRequest)
   const [resourceChannel, resourceService] = channelExtension
     ? channelExtension.valueString.split(':')
     : [undefined, undefined];
-  const { channelType, service } = getChannelAndService(resourceChannel, resourceService);
+  const { channelType, serviceType } = getChannelAndService(resourceChannel, resourceService);
 
-  const channel = require(`./${channelType.type}/${service.name}`);
-  switch (channelType.type) {
-    case 'sms':
-      const smsChannel = channel.default as IChannel;
-      return new Promise((resolve, reject) =>
-        smsChannel.processNotification(createNotificationRequest(resource, service.props, extensions))
-        .then((response: INotificationResponse) =>
-          resolve(fromNotificationResponseToCommunicationResource(response, `CommunicationRequest/${resource.id}`)))
-        .catch(reject));
-    default:
-      return Promise.reject(new Error(`Unknown channel channel type ${channelType}`));
-  }
+  const service = require(`./${channelType.type}/${serviceType.name}`);
+  const channel = require(`./${channelType.type}`);
+
+  const serviceImpl = service.default as IService;
+  const channelImpl = channel.default as IChannel;
+  return new Promise((resolve, reject) =>
+    serviceImpl.processNotification(channelImpl.createNotificationRequest(resource, serviceType.props, extensions))
+      .then((response: INotificationResponse) =>
+        resolve(fromNotificationResponseToCommunicationResource(response, `CommunicationRequest/${resource.id}`)))
+      .catch(reject));
 };
 
 // @ts-ignore
 export const processWebhook = ({ data, channelName, serviceName }): Promise<any> =>
   new Promise(async (resolve, reject) => {
     try {
-      const { channelType, service } = getChannelAndService(channelName, serviceName);
-      const channel = require(`./${channelType.type}/${service.name}`).default as IChannel;
+      const { channelType, serviceType } = getChannelAndService(channelName, serviceName);
+      const serviceImpl = require(`./${channelType.type}/${serviceType.name}`).default as IService;
 
-      const response = await channel.processWebhook(data);
+      const response = await serviceImpl.processWebhook(data);
 
       const communicationResources = (await fhirService.getCommunicationResources(response.id))
         .map((comm: any) => comm.resource)
