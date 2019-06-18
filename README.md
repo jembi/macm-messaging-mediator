@@ -20,16 +20,8 @@ To start the mediator without Docker please set the required environmental varia
 ```
 npm start
 ```
-**Environmental Variable**  
 
-  Key  | Description
- ------- | -----------
- NODE_ENV | Nodejs application environment
- HEARTH_HOST | Hearth host name
- HEARTH_PORT | The port Hearth is running on
- HEARTH_SECURED | `true` for `https` and `false` for `http`
- PORT | Port number for the mACM messaging mediator
-
+Some services might require a webhook configured in the config file. For your development environment, we advise that you use [ngrok](https://ngrok.com/) to allow external services to call your webhook endpoints.
 ## Running Tests
 
 To run automated tests please run the following command:
@@ -41,3 +33,13 @@ To run tests in watch mode:
 ```
 npm test:watch
 ```
+
+## Environmental Variable  
+
+  Key  | Description
+ ------- | -----------
+ NODE_ENV | Nodejs application environment
+ HEARTH_HOST | Hearth host name
+ HEARTH_PORT | The port Hearth is running on
+ HEARTH_SECURED | `true` for `https` and `false` for `http`
+ PORT | Port number for the mACM messaging mediator
