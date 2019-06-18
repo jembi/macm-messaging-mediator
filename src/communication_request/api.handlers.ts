@@ -5,9 +5,11 @@ import { Request, Response } from 'express';
 import { communicationRequestSchema } from './schema';
 import { fhirStore } from '../services';
 import { processCommunicationRequest } from '../channels';
-import { createOperationOutcome, getSeverityAndCode, deepClone } from '../utils';
-import { OperationOutcomeIssue, SeverityAndCode, OperationOutcome } from '../utils/types';
+import { createOperationOutcome, getSeverityAndCode, deepClone, buildHearthUrl } from '../utils';
+import { OperationOutcomeIssue, SeverityAndCode, OperationOutcome, PortNumber } from '../utils/types';
 import { CommunicationRequest } from './types';
+import { EnvKeys, fhirResources } from '../constants';
+import { default as config } from '../config';
 
 export const addCommunicationRequest = async (req: Request, res: Response, next: Function) => {
   const validationResult = Joi.validate(req.body || {}, communicationRequestSchema);
@@ -38,7 +40,15 @@ export const addCommunicationRequest = async (req: Request, res: Response, next:
   return res.status(202).json(operationOutcome);
 };
 
-export const getCommunicationRequests = async (req: Request, res: Response, next: Function) =>
+export const getCommunicationRequests = async (req: Request, res: Response, next: Function) => {
+  const fhirStoreUrl = buildHearthUrl({
+    host: config.get(EnvKeys.HearthHost) as string,
+    port: config.get(EnvKeys.HearthPort) as PortNumber,
+    secured: config.get(EnvKeys.HearthSecured) as boolean,
+    path: `fhir/${fhirResources.COMMUNICATION_REQUEST}`
+  });
+
   res
     .status(200)
-    .json(await fhirStore.getCommunicationRequests(req.query));
+    .json(await fhirStore.searchForResources(fhirStoreUrl, req.query));
+};

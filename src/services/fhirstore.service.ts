@@ -104,24 +104,17 @@ const getCommunicationResources = (messageId: string) : Promise<any[]> =>
     })).then((response: any) => resolve(response.data.entry)).catch(reject)
   );
 
-const getCommunicationRequests = (searchParams: Object) : Promise<any[]> =>
-    new Promise((resolve, reject) => {
-      const hearthUrl = buildHearthUrl({
-        host: config.get(EnvKeys.HearthHost) as string,
-        port: config.get(EnvKeys.HearthPort) as PortNumber,
-        secured: config.get(EnvKeys.HearthSecured) as boolean,
-        path: `fhir/${fhirResources.COMMUNICATION_REQUEST}`
-      });
-
+const searchForResources = (fhirStoreUrl: string, searchParams: Object) : Promise<any[]> =>
+    new Promise((resolve, reject) =>
       axios
-        .get(appendExpressSearchParams(hearthUrl, searchParams))
+        .get(appendExpressSearchParams(fhirStoreUrl, searchParams))
         .then((response: any) => resolve(response.data.entry))
-        .catch(reject);
-    });
+        .catch(reject)
+    );
 
 export default {
   addCommunicationRequest,
   addCommunicationResource,
   getCommunicationResources,
-  getCommunicationRequests
+  searchForResources
 };
