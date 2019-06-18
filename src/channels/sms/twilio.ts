@@ -11,6 +11,7 @@ interface Props {
   sid: string;
   token: string;
   from: string;
+  webhookActive: boolean;
 }
 
 interface WebhookData {
@@ -51,18 +52,24 @@ const channel: IChannel = {
   processNotification: (notificationRequest: INotificationRequest) : Promise<INotificationResponse> =>
     new Promise((resolve, reject) => {
       const props = notificationRequest.props as Props;
-      const statusCallback = createCallbackUrl('sms', 'twilio');
-      const client = Twilio(props.sid, props.token);
 
-      client.messages.create({
-        statusCallback,
+      const clientParams = {
         from: props.from,
         to: notificationRequest.to[0],
         body: notificationRequest.body
-      })
+      }
+      if (props.webhookActive) {
+        //@ts-ignore
+        clientParams.statusCallback = createCallbackUrl('sms', 'twilio');
+      }
+
+      const client = Twilio(props.sid, props.token);
+      client.messages.create(clientParams)
       // @ts-ignore
       .then((message: MessageInstance) => resolve(toSmsResponse(message)))
       .catch(reject);
+
+      
     }),
 
   // TODO: Implment as part of the ISmsChannel interface

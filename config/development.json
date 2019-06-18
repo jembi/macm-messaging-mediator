@@ -16,7 +16,8 @@
             "props": {
               "token": "",
               "sid": "",
-              "from": ""
+              "from": "",
+              "webhookActive": false
             }
           },
           {
