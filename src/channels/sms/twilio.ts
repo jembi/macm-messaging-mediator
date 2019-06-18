@@ -57,9 +57,10 @@ const channel: IChannel = {
         from: props.from,
         to: notificationRequest.to[0],
         body: notificationRequest.body
-      }
+      };
+
       if (props.webhookActive) {
-        //@ts-ignore
+        // @ts-ignore
         clientParams.statusCallback = createCallbackUrl('sms', 'twilio');
       }
 
@@ -68,8 +69,6 @@ const channel: IChannel = {
       // @ts-ignore
       .then((message: MessageInstance) => resolve(toSmsResponse(message)))
       .catch(reject);
-
-      
     }),
 
   // TODO: Implment as part of the ISmsChannel interface
