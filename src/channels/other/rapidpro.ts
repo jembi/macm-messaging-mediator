@@ -1,6 +1,6 @@
 'use strict';
 import axios, { AxiosRequestConfig } from 'axios';
-import { IChannel, INotificationRequest, INotificationResponse, IWebhookResponse } from '../types';
+import { IService, INotificationRequest, INotificationResponse, IWebhookResponse } from '../types';
 import { CommunicationResource } from '../../communication/types';
 
 interface Props {
@@ -31,11 +31,11 @@ const processNotification = (notificationRequest: INotificationRequest) : Promis
     } as INotificationResponse)).catch(reject);
   });
 
-const channel : IChannel = {
+const service : IService = {
   processNotification,
   processWebhook: (data: any) : Promise<IWebhookResponse> => Promise.reject(new Error('Not implemented')),
   processStatusRequest: (communicationRequestId: string) : Promise<CommunicationResource> =>
     Promise.reject(new Error('Not implemented'))
 };
 
-export default channel;
+export default service;
