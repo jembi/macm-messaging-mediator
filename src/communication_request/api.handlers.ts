@@ -37,3 +37,8 @@ export const addCommunicationRequest = async (req: Request, res: Response, next:
   res.setHeader('Location', addCommunicationRequestResponse.communicationRequestReference);
   return res.status(202).json(operationOutcome);
 };
+
+export const getCommunicationRequests = async (req: Request, res: Response, next: Function) =>
+  res
+    .status(200)
+    .json(await fhirStore.getCommunicationRequests(req.query));

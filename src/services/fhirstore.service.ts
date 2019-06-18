@@ -1,7 +1,10 @@
 'use strict';
 import axios from 'axios';
 import config from '../config';
-import { buildHearthUrl, getResourceIdFromLocationHeader } from '../utils';
+import {
+  buildHearthUrl,
+  getResourceIdFromLocationHeader,
+  appendExpressSearchParams } from '../utils';
 import { PortNumber } from '../utils/types';
 import { fhirResources, EnvKeys } from '../constants';
 import { AddCommunicationRequestResponse, CommunicationRequest } from '../communication_request/types';
@@ -101,8 +104,24 @@ const getCommunicationResources = (messageId: string) : Promise<any[]> =>
     })).then((response: any) => resolve(response.data.entry)).catch(reject)
   );
 
+const getCommunicationRequests = (searchParams: Object) : Promise<any[]> =>
+    new Promise((resolve, reject) => {
+      const hearthUrl = buildHearthUrl({
+        host: config.get(EnvKeys.HearthHost) as string,
+        port: config.get(EnvKeys.HearthPort) as PortNumber,
+        secured: config.get(EnvKeys.HearthSecured) as boolean,
+        path: `fhir/${fhirResources.COMMUNICATION_REQUEST}`
+      });
+
+      axios
+        .get(appendExpressSearchParams(hearthUrl, searchParams))
+        .then((response: any) => resolve(response.data.entry))
+        .catch(reject);
+    });
+
 export default {
   addCommunicationRequest,
   addCommunicationResource,
-  getCommunicationResources
+  getCommunicationResources,
+  getCommunicationRequests
 };
