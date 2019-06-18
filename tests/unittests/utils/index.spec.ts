@@ -1,4 +1,10 @@
-import { createOperationOutcome, getSeverityAndCode, buildHearthUrl, createCallbackUrl } from '../../../src/utils';
+import {
+  createOperationOutcome,
+  getSeverityAndCode,
+  buildHearthUrl,
+  createCallbackUrl,
+  appendExpressSearchParams
+} from '../../../src/utils';
 import { OperationOutcomeIssue, UrlArgs } from '../../../src/utils/types';
 import config from '../../../src/config';
 
@@ -184,6 +190,36 @@ describe('Utils', () => {
 
       expect(() => createCallbackUrl('sms', 'twilio'))
         .toThrowError('Webhook protocol is required and must be "http" or "https"');
+    });
+  });
+
+  describe('appendExpressQueryStrings()', () => {
+    test.each([
+      [
+        { count: 100 },
+        'http://127.0.0.1/fhir/communicationrequest',
+        'http://127.0.0.1/fhir/communicationrequest?count=100'
+      ],
+      [
+        { count: 100, status: 'active' },
+        'http://127.0.0.1/fhir/communicationrequest/',
+        'http://127.0.0.1/fhir/communicationrequest/?count=100&status=active'
+      ]
+    // @ts-ignore
+    ])('should return correct url with search parameters', (queryStrings, url, expectedResult) => {
+      const result = appendExpressSearchParams(url, queryStrings);
+
+      expect(result).toBe(expectedResult);
+    });
+
+    test.each`
+      searchParams                        | url
+      ${{ count: 100, status: 'active' }} | ${''}
+      ${{ count: 100, status: 'active' }} | ${undefined}
+      ${{ count: 100, status: 'active' }} | ${null}
+    `('should throw error when no url is given', ({ searchParams, url }) => {
+      expect(() => appendExpressSearchParams(url, searchParams))
+        .toThrowError('Invalid url');
     });
   });
 });
