@@ -39,29 +39,3 @@ export const addCommunicationRequest = async (req: Request, res: Response, next:
   res.setHeader('Location', addCommunicationRequestResponse.communicationRequestReference);
   return res.status(202).json(operationOutcome);
 };
-
-export const getCommunicationRequests = async (req: Request, res: Response) => {
-  const fhirStoreUrl = buildHearthUrl({
-    host: config.get(EnvKeys.HearthHost) as string,
-    port: config.get(EnvKeys.HearthPort) as PortNumber,
-    secured: config.get(EnvKeys.HearthSecured) as boolean,
-    path: `fhir/${fhirResources.COMMUNICATION_REQUEST}`
-  });
-
-  res
-    .status(200)
-    .json(await fhirStore.searchForResources(fhirStoreUrl, req.query));
-};
-
-export const getCommunicationRequestById = async (req: Request, res: Response) => {
-  const fhirStoreUrl = buildHearthUrl({
-    host: config.get(EnvKeys.HearthHost) as string,
-    port: config.get(EnvKeys.HearthPort) as PortNumber,
-    secured: config.get(EnvKeys.HearthSecured) as boolean,
-    path: `fhir/${fhirResources.COMMUNICATION_REQUEST}/${req.params.id}`
-  });
-
-  res
-    .status(200)
-    .json(await fhirStore.searchForResources(fhirStoreUrl, req.query));
-};
