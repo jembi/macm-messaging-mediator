@@ -3,7 +3,13 @@ import express, { Request, Response } from 'express';
 import { default as config } from '../../src/config';
 import { CommunicationRequest } from '../communication_request/types';
 import { CommunicationResource } from '../communication/types';
-import { INotificationResponse, IService, IChannel, ChannelConfig, ChannelService, ChannelMetadataConfig } from './types';
+import {
+  INotificationResponse,
+  IChannel,
+  ChannelConfig,
+  ChannelService,
+  ChannelMetadataConfig,
+  MessagingService} from './types';
 import { logger } from '../utils';
 import { default as fhirService } from '../services/fhirstore.service';
 
@@ -56,13 +62,14 @@ export const processCommunicationRequest = (resource: CommunicationRequest)
     : [undefined, undefined];
   const { channelType, serviceType } = getChannelAndService(resourceChannel, resourceService);
 
-  const service = require(`./${channelType.type}/${serviceType.name}`);
+  const service = require(`./${channelType.type}/${serviceType.name}`).default;
   const channel = require(`./${channelType.type}`);
 
-  const serviceImpl = service.default as IService;
+  const serviceImpl = new service() as MessagingService;
+
   const channelImpl = channel.default as IChannel;
   return new Promise((resolve, reject) =>
-    serviceImpl.processNotification(channelImpl.createNotificationRequest(resource, serviceType.props, extensions))
+  serviceImpl.processNotification(channelImpl.createNotificationRequest(resource, serviceType.props, extensions))
       .then((response: INotificationResponse) =>
         resolve(fromNotificationResponseToCommunicationResource(response, `CommunicationRequest/${resource.id}`)))
       .catch(reject));
@@ -73,7 +80,8 @@ export const processWebhook = ({ data, channelName, serviceName }): Promise<any>
   new Promise(async (resolve, reject) => {
     try {
       const { channelType, serviceType } = getChannelAndService(channelName, serviceName);
-      const serviceImpl = require(`./${channelType.type}/${serviceType.name}`).default as IService;
+      const service = require(`./${channelType.type}/${serviceType.name}`).default;
+      const serviceImpl = new service();
 
       const response = await serviceImpl.processWebhook(data);
 

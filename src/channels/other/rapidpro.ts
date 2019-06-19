@@ -1,7 +1,10 @@
 'use strict';
 import axios, { AxiosRequestConfig } from 'axios';
-import { IService, INotificationRequest, INotificationResponse, IWebhookResponse } from '../types';
-import { CommunicationResource } from '../../communication/types';
+import {
+  INotificationRequest,
+  INotificationResponse,
+  IWebhookResponse,
+  MessagingService } from '../types';
 
 interface Props {
   flowApiUrl: string;
@@ -9,33 +12,34 @@ interface Props {
   flow: string;
 }
 
-const processNotification = (notificationRequest: INotificationRequest) : Promise<INotificationResponse> =>
-  new Promise((resolve, reject) => {
-    const props = notificationRequest.props as Props;
+export default class RapidProService extends MessagingService {
+  private identifierSystem = 'other:rapidpro';
 
-    const axiosConfig : AxiosRequestConfig = {
-      data: {
-        urns: notificationRequest.to.map(urn => `tel:${urn}`),
-        flow: props.flow,
-        extra: { message: notificationRequest.body }
-      },
-      url: props.flowApiUrl,
-      method: 'post',
-      headers: { Authorization: `Token ${props.token}` }
-    };
+  processNotification (notificationRequest: INotificationRequest): Promise<INotificationResponse> {
+    return new Promise((resolve, reject) => {
+      const props = notificationRequest.props as Props;
 
-    axios(axiosConfig).then((response: any) => resolve({
-      id: response.data.uuid,
-      status: 'in-progress',
-      sent: response.data.created_on
-    } as INotificationResponse)).catch(reject);
-  });
+      const axiosConfig: AxiosRequestConfig = {
+        data: {
+          urns: notificationRequest.to.map(urn => `tel:${urn}`),
+          flow: props.flow,
+          extra: { message: notificationRequest.body }
+        },
+        url: props.flowApiUrl,
+        method: 'post',
+        headers: { Authorization: `Token ${props.token}` }
+      };
 
-const service : IService = {
-  processNotification,
-  processWebhook: (data: any) : Promise<IWebhookResponse> => Promise.reject(new Error('Not implemented')),
-  processStatusRequest: (communicationRequestId: string) : Promise<CommunicationResource> =>
-    Promise.reject(new Error('Not implemented'))
-};
+      axios(axiosConfig).then((response: any) => resolve({
+        id: response.data.uuid,
+        status: 'in-progress',
+        sent: response.data.created_on,
+        identifierSystem: this.identifierSystem
+      } as INotificationResponse)).catch(reject);
+    });
+  }
 
-export default service;
+  processWebhook(data: any): Promise<IWebhookResponse> {
+    return Promise.resolve({} as IWebhookResponse);
+  }
+}

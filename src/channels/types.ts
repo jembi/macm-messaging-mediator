@@ -1,8 +1,7 @@
 'use strict';
 
-import { CommunicationResource } from '../communication/types';
 import { CommunicationRequest } from '../communication_request/types';
-import { PortNumber, Resource } from '../utils/types';
+import { PortNumber, ResourceType } from '../utils/types';
 import { default as fhirStore } from '../../src/services/fhirstore.service';
 import { buildHearthUrl } from '../utils';
 import config from '../../src/config';
@@ -32,7 +31,7 @@ export abstract class MessagingService {
    * @param {string} communicationRequestId
    * @returns {Promise<CommunicationResource>}
    */
-  processStatusRequest(resource: Resource, params: Object)
+  processStatusRequest(resource: ResourceType, params: Object)
     : Promise<any> {
     return new Promise((resolve, reject) => {
       const fhirStoreUrl = buildHearthUrl({
@@ -48,34 +47,6 @@ export abstract class MessagingService {
         .catch(reject);
     });
   }
-}
-
-export interface IService {
-  /**
-   * Processes a INotificationRequest and sends an alert/notification.
-   *
-   * @param {INotificationRequest} notificationRequest
-   * @return {Promise<CommunicationResource>}
-   */
-  processNotification(notificationRequest: INotificationRequest) : Promise<INotificationResponse>;
-
-  /**
-   * Processes an API callback from the implemented messaging service.
-   *
-   * @param {any} data
-   * @returns {Promise<CommunicationResource>}
-   */
-  processWebhook(data: any) : Promise<IWebhookResponse>;
-
-  /**
-   * Processes a request for the delivery status of an alert/notification.
-   * NOTE: This is an implementation of the IHE mACM profile transaction ITI-85
-   *
-   * @param {string} communicationRequestId
-   * @returns {Promise<CommunicationResource>}
-   */
-  processStatusRequest(resource: 'CommunicationRequest' | 'Communication', params: Object)
-    : Promise<CommunicationResource>;
 }
 
 export interface IChannel {
