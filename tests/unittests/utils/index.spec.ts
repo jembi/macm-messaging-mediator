@@ -5,7 +5,7 @@ import {
   createCallbackUrl,
   appendExpressSearchParams
 } from '../../../src/utils';
-import { OperationOutcomeIssue, UrlArgs } from '../../../src/utils/types';
+import { OperationOutcomeIssue, UrlArgs } from '../../../src/types';
 import config from '../../../src/config';
 
 jest.mock('../../../src/config');

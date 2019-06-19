@@ -4,10 +4,13 @@ import express, { Request, Response } from 'express';
 import * as Joi from 'joi';
 import * as Utils from './utils';
 import * as Channels from './channels';
-import { communicationRequestSchema } from './communication_request/schema';
+import { communicationRequestSchema } from './schema';
 import { default as FhirStore } from './fhirstore';
-import { SeverityAndCode, OperationOutcomeIssue, OperationOutcome } from './types';
-import { CommunicationRequest } from './communication_request/types';
+import {
+  SeverityAndCode,
+  OperationOutcomeIssue,
+  OperationOutcome,
+  CommunicationRequest } from './types';
 
 const router = express.Router();
 

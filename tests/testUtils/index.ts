@@ -1,5 +1,5 @@
 'use strict';
-import { OperationOutcomeIssueCode, OperationOutcomeIssueSeverity } from '../../src/utils/types';
+import { OperationOutcomeIssueCode, OperationOutcomeIssueSeverity } from '../../src/types';
 
 export const createOperationOutcome = (
   code: OperationOutcomeIssueCode,

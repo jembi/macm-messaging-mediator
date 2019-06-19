@@ -5,9 +5,12 @@ import {
   buildHearthUrl,
   getResourceIdFromLocationHeader,
   appendExpressSearchParams } from './utils';
-import { PortNumber, CommunicationResource } from './types';
+import {
+  PortNumber,
+  CommunicationResource,
+  AddCommunicationRequestResponse,
+  CommunicationRequest } from './types';
 import { fhirResources, EnvKeys } from './constants';
-import { AddCommunicationRequestResponse, CommunicationRequest } from './communication_request/types';
 
 /**
  * Parses a CommunicationRequest resource and returns a collection of recipient contact numbers.
