@@ -16,8 +16,15 @@
             "props": {
               "token": "",
               "sid": "",
-              "from": "+",
+              "from": "",
               "webhookActive": false              
+            }
+          },
+          {
+            "name": "clickatell",
+            "props": {
+              "clickatellApiKey": "",
+              "url": "https://platform.clickatell.com/messages/http/send"
             }
           }
         ]

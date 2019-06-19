@@ -1,6 +1,6 @@
 'use strict';
 import { INotificationRequest, IChannel } from '../types';
-import { CommunicationRequest } from '../../communication_request/types';
+import { CommunicationRequest } from '../../types';
 
 /**
  * Parses a CommunicationRequest resource and returns a collection of recipient contact numbers.
