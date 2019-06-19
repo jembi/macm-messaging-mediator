@@ -1,14 +1,14 @@
 'use strict';
 import axios from 'axios';
-import config from '../config';
+import config from './config';
 import {
   buildHearthUrl,
   getResourceIdFromLocationHeader,
-  appendExpressSearchParams } from '../utils';
-import { PortNumber } from '../types';
-import { fhirResources, EnvKeys } from '../constants';
-import { AddCommunicationRequestResponse, CommunicationRequest } from '../communication_request/types';
-import { CommunicationResource } from '../communication/types';
+  appendExpressSearchParams } from './utils';
+import { PortNumber } from './types';
+import { fhirResources, EnvKeys } from './constants';
+import { AddCommunicationRequestResponse, CommunicationRequest } from './communication_request/types';
+import { CommunicationResource } from './communication/types';
 
 /**
  * Parses a CommunicationRequest resource and returns a collection of recipient contact numbers.

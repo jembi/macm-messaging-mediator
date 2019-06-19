@@ -11,7 +11,7 @@ import {
   ChannelMetadataConfig,
   MessagingService} from './types';
 import { logger } from '../utils';
-import { default as fhirService } from '../services/fhirstore.service';
+import { default as fhirService } from '../fhirstore';
 
 export const getChannelAndService = (channel: string | undefined, service: string | undefined) => {
   const channelConfig: ChannelMetadataConfig[] = (config.get('channels') as ChannelConfig).metadata ||

@@ -2,12 +2,12 @@ import config from '../../src/config';
 import { default as request } from 'supertest';
 import { validCommunicationRequest } from '../testUtils/data';
 import app from '../../src/app';
-import { default as FhirStore } from '../../src/services/fhirstore.service';
+import { default as FhirStore } from '../../src/fhirstore';
 import { default as channel } from '../../src/channels/sms/twilio';
 import { createOperationOutcome } from '../testUtils';
 
 jest.mock('../../src/config');
-jest.mock('../../src/services/fhirstore.service');
+jest.mock('../../src/fhirstore');
 jest.mock('../../src/channels');
 
 describe('CommunicationRequest API', () => {
