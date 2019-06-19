@@ -47,6 +47,23 @@ export abstract class MessagingService {
         .catch(reject);
     });
   }
+
+  processStatusRequestById(id: string, resource: ResourceType, params: Object)
+    : Promise<any> {
+    return new Promise((resolve, reject) => {
+      const fhirStoreUrl = buildHearthUrl({
+        host: config.get(EnvKeys.HearthHost) as string,
+        port: config.get(EnvKeys.HearthPort) as PortNumber,
+        secured: config.get(EnvKeys.HearthSecured) as boolean,
+        path: `fhir/${resource}/${id}`
+      });
+
+      fhirStore
+        .searchForResources(fhirStoreUrl, params)
+        .then(resolve)
+        .catch(reject);
+    });
+  }
 }
 
 export interface IChannel {

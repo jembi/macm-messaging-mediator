@@ -109,12 +109,32 @@ export const processWebhook = ({ data, channelName, serviceName }): Promise<any>
   });
 
 // @ts-ignore
-export const processStatusRequestById = ({ resource, id, searchParams }): Promise<any> =>
-    Promise.reject(new Error('Not implemented'));
+export const processStatusRequestById = ({ resource, id, searchParams, channel, serviceName }): Promise<any> =>
+  new Promise((resolve, reject) => {
+    const { channelType, serviceType } = getChannelAndService(channel, serviceName);
+    const service = require(`./${channelType.type}/${serviceType.name}`).default;
+
+    const serviceImpl = new service() as MessagingService;
+
+    serviceImpl
+      .processStatusRequestById(id, resource, searchParams)
+      .then(resolve)
+      .catch(reject);
+  });
 
 // @ts-ignore
-export const processStatusRequest = ({ resource, searchParams }): Promise<any> =>
-    Promise.reject(new Error('Not implemented'));
+export const processStatusRequest = ({ resource, searchParams, channel, serviceName }): Promise<any> =>
+new Promise((resolve, reject) => {
+  const { channelType, serviceType } = getChannelAndService(channel, serviceName);
+  const service = require(`./${channelType.type}/${serviceType.name}`).default;
+
+  const serviceImpl = new service() as MessagingService;
+
+  serviceImpl
+    .processStatusRequest(resource, searchParams)
+    .then(resolve)
+    .catch(reject);
+});
 
 const handleWebhook = async (req: Request, res: Response) => {
   try {
