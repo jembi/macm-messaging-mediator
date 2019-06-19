@@ -1,6 +1,5 @@
 'use strict';
-import { INotificationResponse, INotificationRequest, IChannel } from '../types';
-import { CommunicationResource } from '../../communication/types';
+import { INotificationRequest, IChannel } from '../types';
 import { CommunicationRequest } from '../../communication_request/types';
 
 /**

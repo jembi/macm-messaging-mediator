@@ -31,3 +31,23 @@ export interface SeverityAndCode {
   severity: OperationOutcomeIssueSeverity;
   code: OperationOutcomeIssueCode;
 }
+
+interface Reference {
+  reference: string;
+}
+
+interface Identifier {
+  system: string;
+  value: string;
+}
+
+/**
+ * FHIR Communication Resource.
+ */
+export interface CommunicationResource {
+  identifier: Identifier[];
+  resourceType: 'Communication';
+  status: 'in-progress' | 'completed' | 'entered-in-error';
+  basedOn: Reference;
+  sent?: Date;
+}
