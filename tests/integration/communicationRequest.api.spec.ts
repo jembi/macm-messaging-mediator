@@ -2,12 +2,12 @@ import config from '../../src/config';
 import { default as request } from 'supertest';
 import { validCommunicationRequest } from '../testUtils/data';
 import app from '../../src/app';
-import * as services from '../../src/services';
+import { default as FhirStore } from '../../src/services/fhirstore.service';
 import { default as channel } from '../../src/channels/sms/twilio';
 import { createOperationOutcome } from '../testUtils';
 
 jest.mock('../../src/config');
-jest.mock('../../src/services');
+jest.mock('../../src/services/fhirstore.service');
 jest.mock('../../src/channels');
 
 describe('CommunicationRequest API', () => {
@@ -18,7 +18,7 @@ describe('CommunicationRequest API', () => {
       // @ts-ignore
       config.get = jest.fn().mockImplementation(() => 'test');
       // @ts-ignore
-      services.fhirStore.addCommunicationRequest = jest.fn().mockImplementation(() =>
+      FhirStore.addCommunicationRequest = jest.fn().mockImplementation(() =>
         Promise.resolve({
           communicationRequestReference: '',
           contactNumbers: [],
@@ -26,7 +26,7 @@ describe('CommunicationRequest API', () => {
         }));
 
       // @ts-ignore
-      services.fhirStore.addCommunicationResource = jest.fn().mockImplementation(() => Promise.resolve({}));
+      FhirStore.addCommunicationResource = jest.fn().mockImplementation(() => Promise.resolve({}));
 
       // @ts-ignore
       channel.processNotification = jest.fn().mockImplementation(() => Promise.resolve({}));
@@ -36,11 +36,11 @@ describe('CommunicationRequest API', () => {
       // @ts-ignore
       config.get = jest.fn().mockImplementation(() => 'test');
       // @ts-ignore
-      services.fhirStore.addCommunicationRequest = jest.fn().mockImplementation(() =>
+      FhirStore.addCommunicationRequest = jest.fn().mockImplementation(() =>
         Promise.reject(new Error('Connection refused')));
 
       // @ts-ignore
-      services.fhirStore.addCommunicationResource = jest.fn().mockImplementation(() => Promise.resolve({}));
+      FhirStore.addCommunicationResource = jest.fn().mockImplementation(() => Promise.resolve({}));
 
       // @ts-ignore
       channel.send = jest.fn().mockImplementation(() => Promise.resolve({}));

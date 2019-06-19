@@ -3,7 +3,6 @@ import express, { Request, Response } from 'express';
 import helmet from 'helmet';
 import config from './config';
 import { default as createError } from 'http-errors';
-import { default as communicationRequest } from './communication_request';
 import { createOperationOutcome, getSeverityAndCode, logger } from './utils';
 import { OperationOutcomeIssue, SeverityAndCode, StatusCode } from './utils/types';
 import { EnvKeys } from './constants';
@@ -38,7 +37,6 @@ export const errorHandler = (err: any, req: Request, res: Response, next: Functi
 app.use(helmet())
   .use(express.json())
   .use(express.urlencoded({ extended: false }))
-  .use('/CommunicationRequest', communicationRequest.apiRouter)
   .use('/webhook', channelsApiRouter)
   .use('/', api)
   .use(resourceNotFoundHandler)
