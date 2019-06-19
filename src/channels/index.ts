@@ -108,7 +108,12 @@ export const processWebhook = ({ data, channelName, serviceName }): Promise<any>
     }
   });
 
-export const processStatusRequest = (communicationRequestId: string): Promise<CommunicationResource> =>
+// @ts-ignore
+export const processStatusRequestById = ({ resource, id, searchParams }): Promise<any> =>
+    Promise.reject(new Error('Not implemented'));
+
+// @ts-ignore
+export const processStatusRequest = ({ resource, searchParams }): Promise<any> =>
     Promise.reject(new Error('Not implemented'));
 
 const handleWebhook = async (req: Request, res: Response) => {
