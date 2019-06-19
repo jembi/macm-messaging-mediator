@@ -1,8 +1,7 @@
 'use strict';
 import express, { Request, Response } from 'express';
 import { default as config } from '../../src/config';
-import { CommunicationRequest } from '../communication_request/types';
-import { CommunicationResource } from '../types';
+import { CommunicationRequest, CommunicationResource } from '../types';
 import {
   INotificationResponse,
   IChannel,
