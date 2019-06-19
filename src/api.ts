@@ -3,7 +3,7 @@ import { default as createError } from 'http-errors';
 import express, { Request, Response } from 'express';
 import * as Joi from 'joi';
 import * as Utils from './utils';
-import { processStatusRequestById, processStatusRequest, processCommunicationRequest } from './channels';
+import * as Channels from './channels';
 import { communicationRequestSchema } from './communication_request/schema';
 import { default as FhirStore } from './services/fhirstore.service';
 import { SeverityAndCode, OperationOutcomeIssue, OperationOutcome } from './utils/types';
@@ -12,7 +12,7 @@ import { CommunicationRequest } from './communication_request/types';
 const router = express.Router();
 
 router.get('/:channel/:service/:resource/:id', Utils.wrapHandler(async (req: Request, res: Response) =>
-  res.status(200).json(await processStatusRequestById({
+  res.status(200).json(await Channels.processStatusRequestById({
     resource: req.params.resource,
     id: req.params.id,
     searchParams: req.query,
@@ -22,13 +22,31 @@ router.get('/:channel/:service/:resource/:id', Utils.wrapHandler(async (req: Req
 ));
 
 router.get('/:channel/:service/:resource', Utils.wrapHandler(async (req: Request, res: Response) =>
-  res.status(200).json(await processStatusRequest({
+  res.status(200).json(await Channels.processStatusRequest({
     resource: req.params.resource,
     searchParams: req.query,
     channel: req.params.channel,
     serviceName: req.params.service
   }))
 ));
+
+router.post('/webhook/:channel/:service', async (req: Request, res: Response) => {
+  try {
+    Utils.logger.info('Webhook call received.');
+
+    const body = await Channels.processWebhook({
+      data: req.body,
+      channelName: req.params.channel,
+      serviceName: req.params.service
+    });
+    Utils.logger.info('Webhook call successful.');
+
+    res.status(200).end();
+  } catch (err) {
+    Utils.logger.error(err);
+    res.status(200).end();
+  }
+})
 
 router.post('/communicationrequest', Utils.wrapHandler(async (req: Request, res: Response, next: Function) => {
   const validationResult = Joi.validate(req.body || {}, communicationRequestSchema);
@@ -42,7 +60,7 @@ router.post('/communicationrequest', Utils.wrapHandler(async (req: Request, res:
   const updatedCommunicationRequest = Utils.deepClone(req.body) as CommunicationRequest;
   updatedCommunicationRequest.id = addCommunicationRequestResponse.communicationRequestReference.split('/')[1];
 
-  const communication = await processCommunicationRequest(updatedCommunicationRequest);
+  const communication = await Channels.processCommunicationRequest(updatedCommunicationRequest);
   await FhirStore.addCommunicationResource(communication);
 
   const severityAndCode : SeverityAndCode = Utils.getSeverityAndCode(202);

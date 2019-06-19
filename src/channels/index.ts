@@ -135,26 +135,3 @@ new Promise((resolve, reject) => {
     .then(resolve)
     .catch(reject);
 });
-
-const handleWebhook = async (req: Request, res: Response) => {
-  try {
-    logger.info('Webhook call received.');
-
-    const body = await processWebhook({
-      data: req.body,
-      channelName: req.params.channel,
-      serviceName: req.params.service
-    });
-    logger.info('Webhook call successful.');
-
-    res.status(200).end();
-  } catch (err) {
-    logger.error(err);
-    res.status(200).end();
-  }
-};
-
-const router = express.Router();
-router.post('/:channel/:service', handleWebhook);
-
-export const apiRouter = router;
