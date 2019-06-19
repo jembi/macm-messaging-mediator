@@ -2,7 +2,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { logger } from '../../utils';
 
-import { 
+import {
   INotificationRequest,
   INotificationResponse,
   IWebhookResponse,
@@ -26,14 +26,14 @@ interface WebhookData {
 }
 
 /**
- * This is an untested Clickatell Service but is used to demonstrate the ease of 
+ * This is an untested Clickatell Service but is used to demonstrate the ease of
  * channel creation with webhook configuration. With the Twilio channel the webhook is sent in the message request.
  * On Clickatell the webhook url must be configured on the clickatell portal. The webhook url configured must be
  * a POST to  http://<domain>/webhook/sms/clickatell
  */
 export default class ClickatellService extends MessagingService {
   private identifierSystem = 'macm:sms:clickatell';
-  
+
   constructor () {
     super();
   }
@@ -53,12 +53,11 @@ export default class ClickatellService extends MessagingService {
         },
       };
 
-      axios(axiosConfig).then((response: any) => resolve(
-        {
-          id: response.data.messages[0].apiMessageId,
-          status: 'in-progress',
-          identifierSystem: this.identifierSystem
-        } as INotificationResponse)).catch(reject);
+      axios(axiosConfig).then((response: any) => resolve({
+        id: response.data.messages[0].apiMessageId,
+        status: 'in-progress',
+        identifierSystem: this.identifierSystem
+      } as INotificationResponse)).catch(reject);
     });
   }
 
@@ -66,7 +65,7 @@ export default class ClickatellService extends MessagingService {
     return  new Promise((resolve, reject) => {
       const webHookData = data as WebhookData;
       // TODO we need to ensure that all data relevant to this communication resource is made
-      // known to the caller in ITI-85 suggestion is to store the full webookData object in 
+      // known to the caller in ITI-85 suggestion is to store the full webookData object in
       // the extension field.
       logger.info(JSON.stringify(webHookData));
       return webHookData ? resolve({
@@ -94,4 +93,4 @@ export default class ClickatellService extends MessagingService {
         throw new Error('Unknown Twilio message status');
     }
   }
-};
+}
