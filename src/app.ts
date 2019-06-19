@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import config from './config';
 import { default as createError } from 'http-errors';
 import { createOperationOutcome, getSeverityAndCode, logger } from './utils';
-import { OperationOutcomeIssue, SeverityAndCode, StatusCode } from './utils/types';
+import { OperationOutcomeIssue, SeverityAndCode, StatusCode } from './types';
 import { EnvKeys } from './constants';
 import api from './api';
 

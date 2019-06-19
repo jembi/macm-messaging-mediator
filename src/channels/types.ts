@@ -1,7 +1,7 @@
 'use strict';
 
 import { CommunicationRequest } from '../communication_request/types';
-import { PortNumber, ResourceType } from '../utils/types';
+import { PortNumber, ResourceType } from '../types';
 import { default as fhirStore } from '../../src/services/fhirstore.service';
 import { buildHearthUrl } from '../utils';
 import config from '../../src/config';

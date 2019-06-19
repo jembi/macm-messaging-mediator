@@ -5,7 +5,7 @@ import {
   buildHearthUrl,
   getResourceIdFromLocationHeader,
   appendExpressSearchParams } from '../utils';
-import { PortNumber } from '../utils/types';
+import { PortNumber } from '../types';
 import { fhirResources, EnvKeys } from '../constants';
 import { AddCommunicationRequestResponse, CommunicationRequest } from '../communication_request/types';
 import { CommunicationResource } from '../communication/types';

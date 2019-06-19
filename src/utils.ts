@@ -8,8 +8,8 @@ import {
   UrlArgs,
   SeverityAndCode,
   StatusCode, } from './types';
-import config from '../config';
-import { ChannelConfig, WebhookConfig } from '../channels/types';
+import config from './config';
+import { ChannelConfig, WebhookConfig } from './channels/types';
 
 const formatLog = format.printf(info =>
   info.message

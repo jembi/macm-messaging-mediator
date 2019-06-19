@@ -6,7 +6,7 @@ import * as Utils from './utils';
 import * as Channels from './channels';
 import { communicationRequestSchema } from './communication_request/schema';
 import { default as FhirStore } from './services/fhirstore.service';
-import { SeverityAndCode, OperationOutcomeIssue, OperationOutcome } from './utils/types';
+import { SeverityAndCode, OperationOutcomeIssue, OperationOutcome } from './types';
 import { CommunicationRequest } from './communication_request/types';
 
 const router = express.Router();
