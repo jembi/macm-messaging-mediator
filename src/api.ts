@@ -63,7 +63,7 @@ router.post('/communicationrequest', Utils.wrapHandler(async (req: Request, res:
   const updatedCommunicationRequest = Utils.deepClone(req.body) as CommunicationRequest;
   updatedCommunicationRequest.id = addCommunicationRequestResponse.communicationRequestReference.split('/')[1];
 
-  const communication = await Channels.processCommunicationRequest(updatedCommunicationRequest);
+  const [communication, channelAndService] = await Channels.processCommunicationRequest(updatedCommunicationRequest);
   await FhirStore.addCommunicationResource(communication);
 
   const severityAndCode : SeverityAndCode = Utils.getSeverityAndCode(202);
@@ -76,7 +76,12 @@ router.post('/communicationrequest', Utils.wrapHandler(async (req: Request, res:
   };
 
   const operationOutcome : OperationOutcome = Utils.createOperationOutcome([issue]);
-  res.setHeader('Location', addCommunicationRequestResponse.communicationRequestReference);
+  res.setHeader(
+    'Location',
+    // @ts-ignore
+    `${channelAndService.channel}/${channelAndService.service}`
+    + `/${addCommunicationRequestResponse.communicationRequestReference}`
+  );
   return res.status(202).json(operationOutcome);
 }));
 

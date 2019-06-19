@@ -1,5 +1,4 @@
 'use strict';
-import express, { Request, Response } from 'express';
 import { default as config } from '../../src/config';
 import { CommunicationRequest, CommunicationResource } from '../types';
 import {
@@ -47,7 +46,7 @@ export const fromNotificationResponseToCommunicationResource =
 });
 
 export const processCommunicationRequest = (resource: CommunicationRequest)
-  : Promise<CommunicationResource> => {
+  : Promise<[CommunicationResource, Object]> => {
   const channelExtension = resource.extension
     ? resource.extension.find(ext => ext.url === 'CommunicationRequest.channel')
     : undefined;
@@ -70,7 +69,9 @@ export const processCommunicationRequest = (resource: CommunicationRequest)
   return new Promise((resolve, reject) =>
   serviceImpl.processNotification(channelImpl.createNotificationRequest(resource, serviceType.props, extensions))
       .then((response: INotificationResponse) =>
-        resolve(fromNotificationResponseToCommunicationResource(response, `CommunicationRequest/${resource.id}`)))
+        resolve([
+          fromNotificationResponseToCommunicationResource(response, `CommunicationRequest/${resource.id}`),
+          { channel: channelType.type, service: serviceType.name }]))
       .catch(reject));
 };
 
