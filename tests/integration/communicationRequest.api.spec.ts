@@ -3,7 +3,7 @@ import { default as request } from 'supertest';
 import { validCommunicationRequest } from '../testUtils/data';
 import app from '../../src/app';
 import { default as FhirStore } from '../../src/fhirstore';
-import { default as channel } from '../../src/channels/sms/twilio';
+import * as Channels from '../../src/channels';
 import { createOperationOutcome } from '../testUtils';
 
 jest.mock('../../src/config');
@@ -26,10 +26,12 @@ describe('CommunicationRequest API', () => {
         }));
 
       // @ts-ignore
-      FhirStore.addCommunicationResource = jest.fn().mockImplementation(() => Promise.resolve({}));
+      FhirStore.addCommunicationResource = jest.fn()
+        .mockImplementation(() => Promise.resolve({}));
 
       // @ts-ignore
-      channel.processNotification = jest.fn().mockImplementation(() => Promise.resolve({}));
+      Channels.processCommunicationRequest = jest.fn()
+        .mockImplementation(() => Promise.resolve([{}, { channel: 'sms', service: 'twilio' }]));
     };
 
     const setupInternalServerRequest = () => {
@@ -40,10 +42,8 @@ describe('CommunicationRequest API', () => {
         Promise.reject(new Error('Connection refused')));
 
       // @ts-ignore
-      FhirStore.addCommunicationResource = jest.fn().mockImplementation(() => Promise.resolve({}));
-
-      // @ts-ignore
-      channel.send = jest.fn().mockImplementation(() => Promise.resolve({}));
+      FhirStore.addCommunicationResource = jest.fn()
+        .mockImplementation(() => Promise.resolve({}));
     };
 
     describe('POST', () => {
