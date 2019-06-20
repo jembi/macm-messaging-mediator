@@ -10,7 +10,7 @@ services:
       - messaging-mediator-network
   
   hearth:
-    image: jembi/hearth
+    image: jembi/hearth:latest
     container_name: hearth
     depends_on:
       - mongo
