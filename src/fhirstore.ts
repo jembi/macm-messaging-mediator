@@ -1,11 +1,16 @@
 'use strict';
 import axios from 'axios';
-import config from '../config';
-import { buildHearthUrl, getResourceIdFromLocationHeader } from '../utils';
-import { PortNumber } from '../utils/types';
-import { fhirResources, EnvKeys } from '../constants';
-import { AddCommunicationRequestResponse, CommunicationRequest } from '../communication_request/types';
-import { CommunicationResource } from '../communication/types';
+import config from './config';
+import {
+  buildHearthUrl,
+  getResourceIdFromLocationHeader,
+  appendExpressSearchParams } from './utils';
+import {
+  PortNumber,
+  CommunicationResource,
+  AddCommunicationRequestResponse,
+  CommunicationRequest } from './types';
+import { fhirResources, EnvKeys } from './constants';
 
 /**
  * Parses a CommunicationRequest resource and returns a collection of recipient contact numbers.
@@ -101,8 +106,17 @@ const getCommunicationResources = (messageId: string) : Promise<any[]> =>
     })).then((response: any) => resolve(response.data.entry)).catch(reject)
   );
 
+const searchForResources = (fhirStoreUrl: string, searchParams: Object) : Promise<any[] | any> =>
+    new Promise((resolve, reject) =>
+      axios
+        .get(appendExpressSearchParams(fhirStoreUrl, searchParams))
+        .then((response: any) => resolve(response.data))
+        .catch(reject)
+    );
+
 export default {
   addCommunicationRequest,
   addCommunicationResource,
-  getCommunicationResources
+  getCommunicationResources,
+  searchForResources
 };

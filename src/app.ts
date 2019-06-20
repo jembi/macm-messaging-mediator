@@ -3,12 +3,10 @@ import express, { Request, Response } from 'express';
 import helmet from 'helmet';
 import config from './config';
 import { default as createError } from 'http-errors';
-import { default as communicationRequest } from './communication_request';
-import { default as communication } from './communication';
 import { createOperationOutcome, getSeverityAndCode, logger } from './utils';
-import { OperationOutcomeIssue, SeverityAndCode, StatusCode } from './utils/types';
+import { OperationOutcomeIssue, SeverityAndCode, StatusCode } from './types';
 import { EnvKeys } from './constants';
-import { apiRouter as channelsApiRouter } from './channels';
+import api from './api';
 
 const app = express();
 
@@ -38,9 +36,7 @@ export const errorHandler = (err: any, req: Request, res: Response, next: Functi
 app.use(helmet())
   .use(express.json())
   .use(express.urlencoded({ extended: false }))
-  .use('/CommunicationRequest', communicationRequest.apiRouter)
-  .use('/Communication', communication.apiRouter)
-  .use('/webhook', channelsApiRouter)
+  .use('/', api)
   .use(resourceNotFoundHandler)
   .use(errorHandler);
 

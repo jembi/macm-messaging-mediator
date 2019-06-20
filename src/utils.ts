@@ -1,14 +1,15 @@
 'use strict';
 import { createLogger, format, transports } from 'winston';
 import assert from 'assert';
+import { URL } from 'url';
 import {
   OperationOutcomeIssue,
   OperationOutcome,
   UrlArgs,
   SeverityAndCode,
   StatusCode, } from './types';
-import config from '../config';
-import { ChannelConfig, WebhookConfig } from '../channels/types';
+import config from './config';
+import { ChannelConfig, WebhookConfig } from './channels/types';
 
 const formatLog = format.printf(info =>
   info.message
@@ -127,4 +128,15 @@ export const createCallbackUrl = (channel: string, service: string) => {
   return webhookConfig.port
     ? `${webhookConfig.protocol}://${webhookConfig.host}:${webhookConfig.port}/webhook/${channel}/${service}`
     : `${webhookConfig.protocol}://${webhookConfig.host}/webhook/${channel}/${service}`;
+};
+
+export const appendExpressSearchParams = (url: any, query: any) => {
+  assert.ok(url, 'Invalid url');
+
+  const newUrl = new URL(url);
+  Object
+    .keys(query)
+    .forEach(key => newUrl.searchParams.append(key, query[key]));
+
+  return newUrl.toString();
 };

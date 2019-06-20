@@ -1,16 +1,19 @@
 'use strict';
 
-import { CommunicationResource } from '../communication/types';
-import { PortNumber } from '../utils/types';
+import { PortNumber, ResourceType, CommunicationRequest } from '../types';
+import { default as fhirStore } from '../fhirstore';
+import { buildHearthUrl } from '../utils';
+import config from '../../src/config';
+import { EnvKeys } from '../constants';
 
-export interface IChannel {
+export abstract class MessagingService {
   /**
    * Processes a INotificationRequest and sends an alert/notification.
    *
    * @param {INotificationRequest} notificationRequest
    * @return {Promise<CommunicationResource>}
    */
-  processNotification(notificationRequest: INotificationRequest) : Promise<INotificationResponse>;
+  abstract processNotification(notificationRequest: INotificationRequest) : Promise<INotificationResponse>;
 
   /**
    * Processes an API callback from the implemented messaging service.
@@ -18,7 +21,7 @@ export interface IChannel {
    * @param {any} data
    * @returns {Promise<CommunicationResource>}
    */
-  processWebhook(data: any) : Promise<IWebhookResponse>;
+  abstract processWebhook(data: any) : Promise<IWebhookResponse>;
 
   /**
    * Processes a request for the delivery status of an alert/notification.
@@ -27,7 +30,50 @@ export interface IChannel {
    * @param {string} communicationRequestId
    * @returns {Promise<CommunicationResource>}
    */
-  processStatusRequest(communicationRequestId: string) : Promise<CommunicationResource>;
+  processStatusRequest(resource: ResourceType, params: Object)
+    : Promise<any> {
+    return new Promise((resolve, reject) => {
+      const fhirStoreUrl = buildHearthUrl({
+        host: config.get(EnvKeys.HearthHost) as string,
+        port: config.get(EnvKeys.HearthPort) as PortNumber,
+        secured: config.get(EnvKeys.HearthSecured) as boolean,
+        path: `fhir/${resource}`
+      });
+
+      fhirStore
+        .searchForResources(fhirStoreUrl, params)
+        .then(resolve)
+        .catch(reject);
+    });
+  }
+
+  processStatusRequestById(id: string, resource: ResourceType, params: Object)
+    : Promise<any> {
+    return new Promise((resolve, reject) => {
+      const fhirStoreUrl = buildHearthUrl({
+        host: config.get(EnvKeys.HearthHost) as string,
+        port: config.get(EnvKeys.HearthPort) as PortNumber,
+        secured: config.get(EnvKeys.HearthSecured) as boolean,
+        path: `fhir/${resource}/${id}`
+      });
+
+      fhirStore
+        .searchForResources(fhirStoreUrl, params)
+        .then(resolve)
+        .catch(reject);
+    });
+  }
+}
+
+export interface IChannel {
+  /**
+   * Transform a CommunicationRequest into an object that conforms to INotificationRequest interface
+   *
+   * @param {CommunicationRequest} communicationRequest
+   * @return {INotificationRequest}
+   */
+  createNotificationRequest (communicationRequest: CommunicationRequest, props: Object, extensions: Object[])
+    : INotificationRequest;
 }
 
 /**

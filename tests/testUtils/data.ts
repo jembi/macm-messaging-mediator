@@ -1,5 +1,5 @@
 'use strict';
-import { CommunicationRequest } from '../../src/communication_request/types';
+import { CommunicationRequest } from '../../src/types';
 
 export const validCommunicationRequest : CommunicationRequest = {
   resourceType: 'CommunicationRequest',

@@ -1,12 +1,15 @@
 'use strict';
-import express, { Request, Response } from 'express';
 import { default as config } from '../../src/config';
-import { CommunicationRequest } from '../communication_request/types';
-import { CommunicationResource } from '../communication/types';
-import { INotificationResponse, IChannel, ChannelConfig, ChannelService, ChannelMetadataConfig } from './types';
-import { createNotificationRequest, fromNotificationResponseToCommunicationResource } from './sms';
+import { CommunicationRequest, CommunicationResource } from '../types';
+import {
+  INotificationResponse,
+  IChannel,
+  ChannelConfig,
+  ChannelService,
+  ChannelMetadataConfig,
+  MessagingService} from './types';
 import { logger } from '../utils';
-import { default as fhirService } from '../services/fhirstore.service';
+import { default as fhirService } from '../fhirstore';
 
 export const getChannelAndService = (channel: string | undefined, service: string | undefined) => {
   const channelConfig: ChannelMetadataConfig[] = (config.get('channels') as ChannelConfig).metadata ||
@@ -24,12 +27,26 @@ export const getChannelAndService = (channel: string | undefined, service: strin
 
   return {
     channelType: matchedChannel,
-    service: matchedService
+    serviceType: matchedService
   };
 };
 
+export const fromNotificationResponseToCommunicationResource =
+(data: INotificationResponse, communicationRequestReference: string): CommunicationResource => ({
+  identifier: [{
+    system: data.identifierSystem,
+    value: data.id
+  }],
+  resourceType: 'Communication',
+  status: data.status,
+  basedOn: {
+    reference: communicationRequestReference
+  },
+  sent: data.sent
+});
+
 export const processCommunicationRequest = (resource: CommunicationRequest)
-  : Promise<CommunicationResource> => {
+  : Promise<[CommunicationResource, Object]> => {
   const channelExtension = resource.extension
     ? resource.extension.find(ext => ext.url === 'CommunicationRequest.channel')
     : undefined;
@@ -41,30 +58,32 @@ export const processCommunicationRequest = (resource: CommunicationRequest)
   const [resourceChannel, resourceService] = channelExtension
     ? channelExtension.valueString.split(':')
     : [undefined, undefined];
-  const { channelType, service } = getChannelAndService(resourceChannel, resourceService);
+  const { channelType, serviceType } = getChannelAndService(resourceChannel, resourceService);
 
-  const channel = require(`./${channelType.type}/${service.name}`);
-  switch (channelType.type) {
-    case 'sms':
-      const smsChannel = channel.default as IChannel;
-      return new Promise((resolve, reject) =>
-        smsChannel.processNotification(createNotificationRequest(resource, service.props, extensions))
-        .then((response: INotificationResponse) =>
-          resolve(fromNotificationResponseToCommunicationResource(response, `CommunicationRequest/${resource.id}`)))
-        .catch(reject));
-    default:
-      return Promise.reject(new Error(`Unknown channel channel type ${channelType}`));
-  }
+  const service = require(`./${channelType.type}/${serviceType.name}`).default;
+  const channel = require(`./${channelType.type}`);
+
+  const serviceImpl = new service() as MessagingService;
+
+  const channelImpl = channel.default as IChannel;
+  return new Promise((resolve, reject) =>
+  serviceImpl.processNotification(channelImpl.createNotificationRequest(resource, serviceType.props, extensions))
+      .then((response: INotificationResponse) =>
+        resolve([
+          fromNotificationResponseToCommunicationResource(response, `CommunicationRequest/${resource.id}`),
+          { channel: channelType.type, service: serviceType.name }]))
+      .catch(reject));
 };
 
 // @ts-ignore
 export const processWebhook = ({ data, channelName, serviceName }): Promise<any> =>
   new Promise(async (resolve, reject) => {
     try {
-      const { channelType, service } = getChannelAndService(channelName, serviceName);
-      const channel = require(`./${channelType.type}/${service.name}`).default as IChannel;
+      const { channelType, serviceType } = getChannelAndService(channelName, serviceName);
+      const service = require(`./${channelType.type}/${serviceType.name}`).default;
+      const serviceImpl = new service();
 
-      const response = await channel.processWebhook(data);
+      const response = await serviceImpl.processWebhook(data);
 
       const communicationResources = (await fhirService.getCommunicationResources(response.id))
         .map((comm: any) => comm.resource)
@@ -89,28 +108,30 @@ export const processWebhook = ({ data, channelName, serviceName }): Promise<any>
     }
   });
 
-export const processStatusRequest = (communicationRequestId: string): Promise<CommunicationResource> =>
-    Promise.reject(new Error('Not implemented'));
+// @ts-ignore
+export const processStatusRequestById = ({ resource, id, searchParams, channel, serviceName }): Promise<any> =>
+  new Promise((resolve, reject) => {
+    const { channelType, serviceType } = getChannelAndService(channel, serviceName);
+    const service = require(`./${channelType.type}/${serviceType.name}`).default;
 
-const handleWebhook = async (req: Request, res: Response) => {
-  try {
-    logger.info('Webhook call received.');
+    const serviceImpl = new service() as MessagingService;
 
-    const body = await processWebhook({
-      data: req.body,
-      channelName: req.params.channel,
-      serviceName: req.params.service
-    });
-    logger.info('Webhook call successful.');
+    serviceImpl
+      .processStatusRequestById(id, resource, searchParams)
+      .then(resolve)
+      .catch(reject);
+  });
 
-    res.status(200).end();
-  } catch (err) {
-    logger.error(err);
-    res.status(200).end();
-  }
-};
+// @ts-ignore
+export const processStatusRequest = ({ resource, searchParams, channel, serviceName }): Promise<any> =>
+new Promise((resolve, reject) => {
+  const { channelType, serviceType } = getChannelAndService(channel, serviceName);
+  const service = require(`./${channelType.type}/${serviceType.name}`).default;
 
-const router = express.Router();
-router.post('/:channel/:service', handleWebhook);
+  const serviceImpl = new service() as MessagingService;
 
-export const apiRouter = router;
+  serviceImpl
+    .processStatusRequest(resource, searchParams)
+    .then(resolve)
+    .catch(reject);
+});
