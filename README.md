@@ -110,4 +110,22 @@ The component allows extra data to be passed to services via “props”. Props 
  PORT | Port number for the mACM messaging mediator
 
  ## Known Issues
- - The `telecom` element data type for contained resources does not conform to the FHIR specification. This element will need to be changed to a collection. 
+ - The `telecom` element data type for contained resources does not conform to the FHIR specification. This element will need to be changed to a collection.
+ 
+ ## Limitations
+- Performance Issues
+  - The current implementation has performance limitations since all transactions are synchronous.
+  - A queuing mechanism will need to be implemented to allow the component to process each ITI-84 transaction in the background and respond quicker to reporters.
+- Service Persistence
+  - While services can optionally handle transaction ITI-85, there is currently no way to prevent the persistence of the CommunicationRequest resource that comes in as part of transaction ITI-84.
+  - No Capability Statement
+  - The component does not currently expose a CapabilityStatement resource as recommended in the FHIR specification.
+- No XML Support
+  - The component supports the JSON format for messages but does not currently support XML as specified by the mACM IHE profile and the FHIR specifications.
+- FHIR Version Support
+  - The component supports FHIR STU3 http://hl7.org/fhir/STU3/index.html. This is due to the dependency on Hearth which currently supports STU3 at the time of writing. 
+- No formal FHIR profile for Communication and CommunicationRequest resources
+  - There is no formally defined or published profile for the Communication and CommunicationRequest resources. 
+- Only supports contained resources for Recipient and Requester.
+- No configuration support from the OpenHIM console
+
