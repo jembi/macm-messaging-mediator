@@ -1,4 +1,44 @@
 {
+  "mediator": {
+    "urn": "urn:mediator:macm-message-mediator",
+    "version": "1.0.0",
+    "name": "mACM Message Mediator",
+    "endpoints": [
+      {
+        "name": "mACM Message Mediator Root",
+        "host": "localhost",
+        "port": "3002",
+        "path": "/",
+        "type": "http"
+      }
+    ],
+    "defaultChannelConfig": [    {
+      "name": "mACM Channel",
+      "urlPattern": "/macm/.*",
+      "type": "http",
+      "allow": [
+        "internal"
+      ],
+      "routes": [
+        {
+          "name": "OpenInfoMan-DHIS2 Sync Trigger NextGen",
+          "host": "localhost",
+          "port": "5015",
+          "path": "/trigger",
+          "type": "http",
+          "primary": "true"
+        }
+      ]
+    }]
+  },
+  "openhim": {
+    "api": {
+      "username": "root@openhim.org",
+      "password": "openhim",
+      "apiURL": "https://localhost:8080",
+      "trustSelfSigned": true
+    }
+  },
   "channels": {
     "webhook": {
       "host": "localhost",
@@ -17,7 +57,7 @@
               "token": "",
               "sid": "",
               "from": "",
-              "webhookActive": false              
+              "webhookActive": false
             }
           },
           {

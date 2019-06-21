@@ -110,3 +110,11 @@ export interface AddCommunicationRequestResponse {
   text: string;
   contactNumbers: string[];
 }
+
+export interface OpeHimConfig {
+  username: string;
+  password: string;
+  apiURL: string;
+  trustSelfSigned: boolean;
+  urn?: string;
+}

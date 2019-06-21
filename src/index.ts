@@ -1,9 +1,12 @@
 #!/usr/bin/env node
+// @ts-ignore
+import * as MUtils from 'openhim-mediator-utils';
 import config from './config';
 import app from './app';
 import http from 'http';
 import { logger } from './utils';
 import { EnvKeys } from './constants';
+import { OpeHimConfig } from './types';
 
 const normalizePort = (val: any) => {
   const port = parseInt(val, 10);
@@ -40,12 +43,25 @@ const onError = (error: any) => {
   }
 };
 
+const initMediator = () => {
+  const openHImConfig = config.get('openhim').api as OpeHimConfig;
+  MUtils.registerMediator(openHImConfig, config.get('mediator'), (err: Error) => {
+    if (err) {
+      return logger.error(err);
+    }
+
+    openHImConfig.urn = config.get('mediator').urn;
+    MUtils.activateHeartbeat(openHImConfig);
+  });
+};
+
 const onListening = () => {
   const addr = server.address();
   const bind = typeof addr === 'string'
     ? `pipe  ${addr}`
     : `port ${addr ? addr.port : config.get(EnvKeys.Port)}`;
   logger.info(`Listening on ${bind}`);
+  initMediator();
 };
 
 const port = normalizePort(config.get(EnvKeys.Port));
