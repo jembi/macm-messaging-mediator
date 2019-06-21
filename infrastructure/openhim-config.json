@@ -1,0 +1,6 @@
+{
+  "mongo": {
+    "url": "mongodb://mongo:27017/openhim",
+    "atnaUrl": "mongodb://mongo:27017/openhim"
+  }
+}
