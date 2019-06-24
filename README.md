@@ -129,7 +129,8 @@ Every mediator must register itself with the OpenHIM and use the information und
 
  ## Known Issues
  - The `telecom` element data type for contained resources does not conform to the FHIR specification. This element will need to be changed to a collection.
- 
+ - Security of the Mediator needs to be considered. At the moment it is assumed that security is provided through the OpenHIM, and the mediator itself made inaccessible to external access. In addition, security between the Mediator and the FHIR store needs to be considered. 
+
  ## Limitations
 - Performance Issues
   - The current implementation has performance limitations since all transactions are synchronous.
