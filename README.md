@@ -99,6 +99,21 @@ This is the name of the service and must match the name of the module implementi
 **`metadata.service.props`**
 The component allows extra data to be passed to services via “props”. Props are extra fields required by the service and accessible via the message service interface.
 
+#### openhim
+This is configuration data for communicating with the OpenHIM. Options include:
+  
+**`api.username`**  
+OpenHIM account username.
+
+**`api.password`**  
+OpenHIM account password.
+
+**`api.apiUrl`**  
+OpenHIM API url, the default is usually the url with port `8080`.
+
+**`api.trustSelfSigned`**  
+When set to true, the mediator will trust self-signed ssl certificated from the OpenHIM.
+
 ## Environmental Variable  
 
   Key  | Description
