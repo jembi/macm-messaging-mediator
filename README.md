@@ -101,7 +101,7 @@ The component allows extra data to be passed to services via “props”. Props 
 
 #### openhim
 This is configuration data for communicating with the OpenHIM. Options include:
-  
+
 **`api.username`**  
 OpenHIM account username.
 
@@ -112,7 +112,10 @@ OpenHIM account password.
 OpenHIM API url, the default is usually the url with port `8080`.
 
 **`api.trustSelfSigned`**  
-When set to true, the mediator will trust self-signed ssl certificated from the OpenHIM.
+When set to true, the mediator will trust self-signed ssl certificated from the OpenHIM.  
+
+#### Mediator
+Every mediator must register itself with the OpenHIM and use the information under `openhim` options to communicate with the OpenHIM. This section of the configuration deals with all the data required by the mediator to successfully register itself with the OpenHIM. All the configuration options can be found [here](https://openhim.readthedocs.io/en/latest/dev-guide/mediators.html#mediator-registration).
 
 ## Environmental Variable  
 
